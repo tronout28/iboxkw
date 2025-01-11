@@ -1,0 +1,48 @@
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: #ddd;
+    margin: 20px 0;
+}
+
+
+.products {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.product {
+    text-align: center;
+    margin: 10px;
+}
+
+.product h3 {
+    margin: 10px 0;
+    font-size: 16px;
+}
+.products-grid {
+    display: flex; /* Susunan horizontal */
+    gap: 20px; /* Jarak antar elemen */
+    overflow-x: auto; /* Scroll horizontal */
+    padding: 20px 0; /* Jarak atas dan bawah */
+    scroll-behavior: smooth; /* Efek scroll mulus */
+    white-space: nowrap; /* Mencegah elemen turun ke baris berikutnya */
+}
+
+.product-card {
+    flex: 0 0 auto; /* Elemen tidak menyusut atau tumbuh */
+    width: 200px; /* Ukuran tetap setiap elemen */
+    text-align: center; /* Teks rata tengah */
+    border: 1px solid #e5e5e5; /* Border */
+    padding: 10px; /* Spasi dalam elemen */
+    border-radius: 8px; /* Sudut membulat */
+    background: #fff; /* Warna latar */
+}
+
+.product-card img {
+    width: 100%; /* Lebar gambar penuh dalam kartu */
+    height: 150px; /* Tinggi gambar */
+    object-fit: cover; /* Gambar proporsional tanpa distorsi */
+    border-radius: 8px; /* Membulatkan sudut gambar */
+}
