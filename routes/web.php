@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
 Route::get('/', function () {
-    return view('home.home'); // Arahkan ke file resources/views/home/home.blade.php
+    return view('catalog.catalog'); 
 });
 
 Route::get('/images-product/{filename}', function ($filename) {
