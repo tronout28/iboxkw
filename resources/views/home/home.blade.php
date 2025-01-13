@@ -49,6 +49,10 @@
         ])
     @endforeach
     
+    
+</div>
+<div>
+    @include('component.featureProduct')
 </div>
 <div class="divider my-6 border-t-2 border-gray-200"></div>
 <h2 class="text-2xl font-semibold text-center" style="padding: 0 150px;">Temukan layanan dan penawaran lainnya.</h2>
