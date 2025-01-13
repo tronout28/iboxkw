@@ -15,11 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('price');
+            $table->enum('category', ['Iphone','Ipad','MacBook','Iwatch','Airpods','other']);
+            $table->bigInteger('price');
             $table->string('image')->nullable();
             $table->enum('requested',['non-accepted','accepted','rejected'])->default('non-accepted');
             $table->enum('status', ['active', 'inactive'])->default('inactive');
+            $table->unsignedBigInteger('user_id')->nullable();
+
+            
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
