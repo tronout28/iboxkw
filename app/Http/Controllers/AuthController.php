@@ -36,7 +36,7 @@ class AuthController extends Controller
     }
 
     public function registeras(Request $request)
-    {   
+    {
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
@@ -57,29 +57,29 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-{
-    // Validate input
-    $request->validate([
-        'email' => 'required|string|email',
-        'password' => 'required|string',
-    ]);
+    {
+        // Validate input
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
 
-    $credentials = $request->only(['email', 'password']);
+        $credentials = $request->only(['email', 'password']);
 
-    // Check if credentials are correct
-    if (!Auth::attempt($credentials)) {
-        return response()->json(['message' => 'Unauthorized'], 401);
+        // Check if credentials are correct
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        // Get authenticated user
+        $user = $request->user();
+
+        // Generate personal access token
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->plainTextToken;
+
+        return response()->json(['token' => $token], 200);
     }
-
-    // Get authenticated user
-    $user = $request->user();
-
-    // Generate personal access token
-    $tokenResult = $user->createToken('Personal Access Token');
-    $token = $tokenResult->plainTextToken;
-
-    return response()->json(['token' => $token], 200);
-}
 
     public function logout(Request $request)
     {
@@ -87,6 +87,4 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Successfully logged out'], 200);
     }
-
-    
 }
