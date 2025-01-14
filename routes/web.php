@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
 Route::get('/', function () {
-    return view('catalog.catalog'); 
+    return view('checkout.checkout'); 
 });
 
 Route::get('/images-product/{filename}', function ($filename) {
