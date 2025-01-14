@@ -11,6 +11,9 @@ Route::get('/', function () {
     return view('login.login'); 
 });
 
+Route::get('/checkout/{id}', function ($id) {
+    return view('checkout.checkout', ['productId' => $id]);
+});
 
 Route::get('/register', function () {
     return view('register.register'); 
@@ -22,7 +25,7 @@ Route::get('/home', function () {
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
-
+Route::get('/api/products', [ProductController::class, 'index']);
 
 Route::get('/images-product/{filename}', function ($filename) {
     $path = public_path('images-product/'.$filename);
