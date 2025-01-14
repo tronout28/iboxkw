@@ -59,6 +59,8 @@ class ProductSeeder extends Seeder
                     'product_id' => $productId,
                     'minus_id' => $minusId,
                     'total_price' => $product['price'] - DB::table('minuses')->where('id', $minusId)->value('minus_price'),
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
         }
