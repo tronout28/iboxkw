@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,9 +104,18 @@
             border-color: #2563eb;
         }
 
-        .color.gray { background-color: #C0C0C0; }
-        .color.black { background-color: #000000; }
-        .color.light-gray { background-color: #D3D3D3; }
+        .color.gray {
+            background-color: #C0C0C0;
+        }
+
+        .color.black {
+            background-color: #000000;
+        }
+
+        .color.light-gray {
+            background-color: #D3D3D3;
+        }
+
         .color.white {
             background-color: #FFFFFF;
             border: 1px solid #E5E7EB;
@@ -134,6 +144,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     @include('home.header')
@@ -197,47 +208,67 @@
     <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            const productId = {{ $productId ?? 'null' }};
-            if (!productId) {
+            // Fix: Add quotes for `{{ $productId ?? 'null' }}` and handle 'null' as a string
+            const productId = "{{ $productId ?? 'null' }}";
+
+            // Check if productId is valid
+            if (!productId || productId === 'null') {
                 console.error('Product ID not found');
                 return;
             }
 
             try {
+                // Fetch product data from API
                 const response = await fetch(`/api/products/${productId}`);
                 const product = await response.json();
 
+                // Validate response
                 if (!product || !product.id) {
                     throw new Error('Invalid product data received');
                 }
 
-                // Update Product Data
-                document.getElementById('productImage').src = product.image || '/images/default-product.jpg';
-                document.getElementById('productName').textContent = product.name || 'Produk Tidak Tersedia';
-                document.getElementById('productSku').textContent = `SKU: ${product.id}`;
+                // Update Product Image
+                const productImage = document.getElementById('productImage');
+                productImage.src = product.image || '/images/default-product.jpg';
 
-                // Update Price
+                // Update Product Name
+                const productName = document.getElementById('productName');
+                productName.textContent = product.name || 'Produk Tidak Tersedia';
+
+                // Update Product SKU
+                const productSku = document.getElementById('productSku');
+                productSku.textContent = `SKU: ${product.id}`;
+
+                // Update Price Section
                 const originalPrice = parseFloat(product.price) || 0;
                 const discountedPrice = parseFloat(product.total_price) || originalPrice;
 
                 const priceSection = document.getElementById('priceSection');
                 priceSection.innerHTML = `
-                    <p class="original-price">${originalPrice ? formatPrice(originalPrice) : ''}</p>
-                    <p class="discounted-price">${formatPrice(discountedPrice)}</p>
-                    <p class="installment">atau <span>${formatPrice(discountedPrice / 24)}/bln*</span></p>
-                `;
+                <p class="original-price">${originalPrice ? formatPrice(originalPrice) : ''}</p>
+                <p class="discounted-price">${formatPrice(discountedPrice)}</p>
+                <p class="installment">atau <span>${formatPrice(discountedPrice / 24)}/bln*</span></p>
+                <a href="#">Simulasi cicilan dan Paylater</a>
+            `;
 
-                // Update Model
+                // Update Model Dropdown
                 const modelSelect = document.getElementById('modelSelect');
-                modelSelect.innerHTML = `<option>${product.category}</option>`;
+                modelSelect.innerHTML = `<option>${product.category || 'Model Tidak Tersedia'}</option>`;
+
             } catch (error) {
+                // Handle Errors
                 console.error(error.message);
             }
 
+            // Helper Function: Format Price
             function formatPrice(price) {
-                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price).replace('IDR', 'Rp');
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                }).format(price).replace('IDR', 'Rp');
             }
         });
     </script>
 </body>
+
 </html>
