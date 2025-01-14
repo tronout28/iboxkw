@@ -8,8 +8,21 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
 Route::get('/', function () {
-    return view('checkout.checkout'); 
+    return view('login.login'); 
 });
+
+
+Route::get('/register', function () {
+    return view('register.register'); 
+});
+
+Route::get('/home', function () {
+    return view('home.home'); 
+});
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+
 
 Route::get('/images-product/{filename}', function ($filename) {
     $path = public_path('images-product/'.$filename);
@@ -26,3 +39,4 @@ Route::get('/images-product/{filename}', function ($filename) {
 
     return $response;
 });
+
