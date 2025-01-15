@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MinusController;
+use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -33,9 +33,13 @@ Route::get('/artikel-admin', function () {
     return view('admin.artikel.artikel'); 
 });
 
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/api/products', [ProductController::class, 'index']);
+Route::get('/get-artikel', [ArtikelController::class, 'index']);
+Route::post('/artikel', [ArtikelController::class, 'store']);
+
 
 Route::prefix('admin')->group(function () {
     Route::view('/dashboard-admin', 'admin.dashboard.dashboard')->name('admin.dashboard.dashboard');

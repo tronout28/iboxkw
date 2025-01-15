@@ -41,34 +41,35 @@ class ArtikelController extends Controller
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:png,jpg,jpeg|max:6000'
         ]);
-
+    
         $artikel = new Artikel([
             'title' => $request->title,
             'subtitle' => $request->subtitle,
             'content' => $request->content,
         ]);
-
+    
         $artikel->save();
-
+    
         // Menangani upload gambar
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->extension();
             $image->move(public_path('images-artikel'), $imageName);
-
+    
             // Menyimpan nama gambar ke database
             $artikel->image = $imageName;
             $artikel->image_url = url('images-artikel/' . $imageName);
-
+    
             $artikel->save();
         }
-
+    
         return response()->json([
             'status' => 'success',
             'data' => $artikel
         ], 201);
     }
-
+    
+    
     public function destroy($id)
     {
         $artikel = Artikel::find($id);
