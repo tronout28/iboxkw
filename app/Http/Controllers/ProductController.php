@@ -14,19 +14,28 @@ class ProductController extends Controller
         $products = Product::all();
         return response()->json($products);
     }
-    
+
     public function show($id)
     {
         $product = Product::with('minuses')->find($id);
 
-        if ($product) {
-            // Return ke view dengan data produk dan minus
-            return view('checkout.checkout', ['product' => $product]);
-        } else {
-            // Redirect jika produk tidak ditemukan
+        if (!$product) {
+            // Jika produk tidak ditemukan, redirect ke halaman lain dengan pesan error
             return redirect('/home')->with('error', 'Product not found');
         }
+
+        // Hitung total_price (harga produk dikurangi harga minus)
+        $product->total_price = $product->price - $product->minuses->sum('minus_price');
+
+        // Jika request meminta JSON (misalnya dari AJAX)
+        if (request()->wantsJson()) {
+            return response()->json($product);
+        }
+
+        // Jika request datang dari web browser, tampilkan ke view checkout
+        return view('checkout.checkout', compact('product'));
     }
+
 
     public function store(Request $request)
     {
