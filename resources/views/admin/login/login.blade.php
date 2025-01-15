@@ -44,9 +44,9 @@
             </div>
             <div class="right-side">
                 <div class="login-box">
-          
+                   
                     <h1>Hello Again!</h1>
-                    <p class="subtitle">Aliquam consectetur et tincidunt praesent enim massa pellentesque velit odio neque</p>
+                    <p class="subtitle">Ini admin</p>
 
                     <!-- Error Message Container -->
                     <div id="responseMessage" class="error-message-container">
@@ -71,10 +71,7 @@
                         </div>
                         <button type="submit" class="btn-login">Login</button>
                         <p class="signup-link">
-                            Don't have an account yet? <a href="/register">Sign Up</a>
-                        </p>
-                        <p class="signup-link">
-                            Login sebagai admin? <a href="/login-admin">Login admin</a>
+                            Login sebagai user? <a href="/">Login user</a>
                         </p>
                     </form>
                 </div>
@@ -116,7 +113,7 @@
 
                         // Redirect to home page after 1 second
                         setTimeout(function () {
-                            window.location.href = '/home';
+                            window.location.href = '/dashboard-admin';
                         }, 1000);
                     },
                     error: function (xhr) {
