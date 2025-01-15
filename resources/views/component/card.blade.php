@@ -5,66 +5,100 @@
         align-items: center;
         background-color: #fff;
         border-radius: 12px;
-        padding: 20px; /* Adjust padding to fit smaller width */
+        padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        width: 220px; /* Adjust width */
+        width: 220px;
+        margin: 10px;
     }
-
     .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
-
     .card-image {
         width: 100%;
         border-radius: 8px;
-        margin-bottom: 15px; /* Adjust margin for spacing */
+        margin-bottom: 15px;
         object-fit: cover;
     }
-
     .card-content {
-        width: 100%; /* Ensure content spans full card width */
-        text-align: left; /* Align text to the left */
+        text-align: left;
+        width: 100%;
     }
-
     .card-badge {
-        font-size: 12px; /* Adjust font size */
+        font-size: 12px;
         color: #f26724;
         font-weight: bold;
         margin-bottom: 10px;
-        display: block; /* Ensure badge respects container width */
+        display: block;
     }
-
     .card-title {
-        font-size: 18px; /* Adjust font size */
+        font-size: 18px;
         font-weight: 600;
         color: #000;
         margin: 8px 0;
-        word-wrap: break-word; /* Break long words if needed */
     }
-
     .card-description {
-        font-size: 14px; /* Adjust font size */
+        font-size: 14px;
         color: #666;
-        margin: 10px 0; /* Adjust margin */
-        word-wrap: break-word; 
+        margin: 10px 0;
     }
-
     .card-price {
-        font-size: 16px; /* Adjust font size */
+        font-size: 16px;
         font-weight: 600;
         color: #000;
         margin-top: 10px;
     }
+
+    .products-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: flex-start; /* Align content to the left */
+        padding: 20px 10px;
+    }
 </style>
 
-<div class="card">
-    <img src="{{ $image }}" alt="{{ $title }}" class="card-image">
-    <div class="card-content">
-        <span class="card-badge">NEW</span>
-        <h3 class="card-title">{{ $title }}</h3>
-        <p class="card-description">{{ $description }}</p>
-        <p class="card-price">{{ $price }}</p>
-    </div>
-</div>
+<div id="product-container" class="products-row"></div>
+
+<script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('product-container');
+
+            async function fetchProducts() {
+                try {
+                    const response = await fetch('/api/products');
+                    if (!response.ok) throw new Error('Failed to fetch products');
+
+                    const products = await response.json();
+                    container.innerHTML = '';
+                    products.forEach(product => {
+                        const cardHtml = `
+                            <div class="card" onclick="navigateToProduct(${product.id})">
+                                <img src="${product.image || '/images/default-product.jpg'}" 
+                                     alt="${product.name}" 
+                                     class="card-image"
+                                     onerror="this.src='/images/default-product.jpg'">
+                                <div class="card-content">
+                                    ${product.category ? `<span class="card-badge">${product.category}</span>` : ''}
+                                    <h3 class="card-title">${product.name}</h3>
+                                    <p class="card-description">${product.description || 'Deskripsi tidak tersedia'}</p>
+                                    <p class="card-price">Rp${Number(product.price).toLocaleString('id-ID')}</p>
+                                </div>
+                            </div>
+                        `;
+                        container.insertAdjacentHTML('beforeend', cardHtml);
+                    });
+                } catch (error) {
+                    console.error('Error fetching products:', error);
+                    container.innerHTML = '<p>Gagal memuat produk. Silakan coba lagi nanti.</p>';
+                }
+            }
+
+            window.navigateToProduct = (productId) => {
+                window.location.href = `/checkout/${productId}`;
+            };
+            
+            fetchProducts();
+        });
+    </script>

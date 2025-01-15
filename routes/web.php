@@ -11,6 +11,8 @@ Route::get('/', function () {
     return view('login.login'); 
 });
 
+Route::get('/checkout/{id}', [ProductController::class, 'show']);
+
 Route::get('/register', function () {
     return view('register.register'); 
 });
@@ -33,7 +35,7 @@ Route::get('/artikel-admin', function () {
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
-
+Route::get('/api/products', [ProductController::class, 'index']);
 
 Route::prefix('admin')->group(function () {
     Route::view('/dashboard-admin', 'admin.dashboard.dashboard')->name('admin.dashboard.dashboard');
@@ -56,4 +58,3 @@ Route::get('/images-product/{filename}', function ($filename) {
 
     return $response;
 });
-

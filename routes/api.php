@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MinusController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ArtikelController;
 
 Route::group(['prefix' => '/auth'], function () {
     Route::post('/register-user', [AuthController::class, 'register']);
@@ -37,5 +38,16 @@ Route::group(['prefix' => '/minus'], function () {
         Route::post('/store', [MinusController::class, 'store']);
         Route::put('/update/{id}', [MinusController::class, 'update']);
         Route::delete('/delete/{id}', [MinusController::class, 'destroy']);
+    });
+});
+
+Route::group(['prefix' => '/artikel'], function () {
+    Route::get('/', [ArtikelController::class, 'index']);
+    Route::get('/get-artikel/{id}', [ArtikelController::class, 'show']);
+
+    Route::group(['middleware' => ['auth:sanctum', 'role:admin']], function () {
+        Route::post('/store', [ArtikelController::class, 'store']);
+        Route::put('/update/{id}', [ArtikelController::class, 'update']);
+        Route::delete('/delete/{id}', [ArtikelController::class, 'destroy']);
     });
 });
