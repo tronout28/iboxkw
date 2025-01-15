@@ -19,21 +19,14 @@ class ProductController extends Controller
     {
         $product = Product::with('minuses')->find($id);
 
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
+        if ($product) {
+            // Return ke view dengan data produk dan minus
+            return view('checkout.checkout', ['product' => $product]);
+        } else {
+            // Redirect jika produk tidak ditemukan
+            return redirect('/home')->with('error', 'Product not found');
         }
-
-        $totalPrice = $product->price;
-        foreach ($product->minuses as $minus) {
-            $totalPrice += $minus->minus_price;
-        }
-
-        $product->total_price = $totalPrice; 
-
-        return response()->json($product);
     }
-
-
 
     public function store(Request $request)
     {
