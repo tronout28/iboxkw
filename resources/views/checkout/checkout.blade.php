@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>Lihat Semua iPhone</title>
+    <title>Checkout Produk</title>
     <style>
         /* Container */
         .container {
@@ -106,29 +106,47 @@
         <div class="product-row">
             <!-- Product Image -->
             <div class="product-image">
-                <img id="productImage" src="/images/default-product.jpg" alt="Produk Tidak Tersedia">
+                <img id="productImage" src="{{ $product->image ?? '/images/default-product.jpg' }}" alt="{{ $product->name ?? 'Produk Tidak Tersedia' }}">
             </div>
 
             <!-- Product Details -->
             <div class="product-details">
-                <h1 id="productName">Produk Tidak Tersedia</h1>
-                <p class="sku" id="productSku">SKU: -</p>
+                <h1 id="productName">{{ $product->name ?? 'Produk Tidak Tersedia' }}</h1>
+                <p class="sku" id="productSku">SKU: {{ $product->id ?? '-' }}</p>
 
                 <!-- Price Section -->
                 <div class="price-section" id="priceSection">
-                    <p class="original-price"></p>
-                    <p class="discounted-price"></p>
-                    <p class="installment">atau <span>Rp 0/bln*</span></p>
-                    <a href="#">Simulasi cicilan dan Paylater</a>
+                    @if (!empty($product->total_price))
+                        <p class="original-price">
+                            {{ $product->price > $product->total_price ? 'Rp' . number_format($product->price, 0, ',', '.') : '' }}
+                        </p>
+                        <p class="discounted-price">Rp{{ number_format($product->total_price, 0, ',', '.') }}</p>
+                        <p class="installment">atau <span>Rp{{ number_format($product->total_price / 24, 0, ',', '.') }}/bln*</span></p>
+                        <a href="#">Simulasi cicilan dan Paylater</a>
+                    @else
+                        <p class="discounted-price">Rp{{ number_format($product->price, 0, ',', '.') }}</p>
+                    @endif
                 </div>
 
                 <!-- Model Dropdown -->
                 <div class="product-model">
                     <label for="modelSelect">Model</label>
                     <select id="modelSelect">
-                        <option>Pilih Model</option>
+                        <option>{{ $product->category ?? 'Model Tidak Tersedia' }}</option>
                     </select>
                 </div>
+
+                <!-- Minus Details -->
+                <h3>Daftar Minus</h3>
+                @if ($product->minuses->isNotEmpty())
+                    <ul>
+                        @foreach ($product->minuses as $minus)
+                            <li>{{ $minus->minus_product }} - Rp{{ number_format($minus->minus_price, 0, ',', '.') }}</li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p>Tidak ada minus terkait dengan produk ini.</p>
+                @endif
             </div>
         </div>
     </div>
@@ -137,19 +155,19 @@
     @include('checkout.container')
 
     <!-- JavaScript -->
-    <script>
+     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // Ambil ID produk dari server-side
+            // Ambil ID produk dari Blade
             const productId = "{{ $productId ?? 'null' }}";
 
-            // Validasi apakah productId tersedia
+            // Validasi productId
             if (!productId || productId === 'null') {
                 console.error('Product ID tidak ditemukan.');
                 return;
             }
 
             try {
-                // Ambil data produk dari API
+                // Fetch data produk dari server
                 const response = await fetch(`/checkout/${productId}`);
                 if (!response.ok) {
                     throw new Error(`Gagal mendapatkan data produk. HTTP Status: ${response.status}`);
@@ -157,56 +175,33 @@
 
                 const product = await response.json();
 
-                // Validasi apakah produk ada
+                // Validasi data produk
                 if (!product || !product.id) {
-                    throw new Error('Data produk tidak valid atau produk tidak ditemukan.');
+                    throw new Error('Data produk tidak valid.');
                 }
 
-                // Update gambar produk
-                const productImage = document.getElementById('productImage');
-                if (productImage) {
-                    productImage.src = product.image || '/images/default-product.jpg';
-                }
+                // Update UI dengan data produk
+                document.getElementById('productImage').src = product.image || '/images/default-product.jpg';
+                document.getElementById('productName').textContent = product.name || 'Produk Tidak Tersedia';
+                document.getElementById('productSku').textContent = `SKU: ${product.id}`;
 
-                // Update nama produk
-                const productName = document.getElementById('productName');
-                if (productName) {
-                    productName.textContent = product.name || 'Produk Tidak Tersedia';
-                }
-
-                // Update SKU produk
-                const productSku = document.getElementById('productSku');
-                if (productSku) {
-                    productSku.textContent = `SKU: ${product.id}`;
-                }
-
-                // Update bagian harga
-                const originalPrice = parseFloat(product.price) || 0;
-                const discountedPrice = parseFloat(product.total_price) || originalPrice;
-
+                // Update harga
                 const priceSection = document.getElementById('priceSection');
-                if (priceSection) {
-                    priceSection.innerHTML = `
-                        <p class="original-price">${originalPrice > discountedPrice ? formatPrice(originalPrice) : ''}</p>
-                        <p class="discounted-price">${formatPrice(discountedPrice)}</p>
-                        <p class="installment">atau <span>${formatPrice(discountedPrice / 24)}/bln*</span></p>
-                        <a href="#">Simulasi cicilan dan Paylater</a>
-                    `;
-                }
+                priceSection.innerHTML = `
+                    <p class="original-price">${product.price > product.total_price ? formatPrice(product.price) : ''}</p>
+                    <p class="discounted-price">${formatPrice(product.total_price)}</p>
+                    <p class="installment">atau <span>${formatPrice(product.total_price / 24)}/bln*</span></p>
+                    <a href="#">Simulasi cicilan dan Paylater</a>
+                `;
 
                 // Update dropdown model
                 const modelSelect = document.getElementById('modelSelect');
-                if (modelSelect) {
-                    modelSelect.innerHTML = `<option>${product.category || 'Model Tidak Tersedia'}</option>`;
-                }
+                modelSelect.innerHTML = `<option>${product.category || 'Model Tidak Tersedia'}</option>`;
             } catch (error) {
                 console.error('Error:', error.message);
 
-                // Tampilkan pesan error di UI
-                const productName = document.getElementById('productName');
-                if (productName) {
-                    productName.textContent = 'Terjadi kesalahan saat memuat data produk.';
-                }
+                // Tampilkan error di UI
+                document.getElementById('productName').textContent = 'Terjadi kesalahan saat memuat data produk.';
             }
 
             // Helper function untuk format harga
