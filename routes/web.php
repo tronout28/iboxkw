@@ -11,9 +11,8 @@ Route::get('/', function () {
     return view('login.login'); 
 });
 
-Route::get('/checkout/{id}', function ($id) {
-    return view('checkout.checkout', ['productId' => $id]);
-});
+Route::get('/checkout/{id}', [ProductController::class, 'show']);
+
 
 Route::get('/register', function () {
     return view('register.register'); 
