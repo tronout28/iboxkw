@@ -15,7 +15,7 @@
 
         <a href="{{ route('admin.artikel.artikel') }}" 
         class="block py-2.5 px-4 rounded flex items-center {{ Request::routeIs('admin.artikel.artikel') ? 'bg-blue-700' : 'hover:bg-blue-600' }}">
-         <i class="fas fa-mobile-alt mr-2"></i> Artikel
+         <i class="fas fa-newspaper mr-2"></i> Artikel 
      </a>
     </nav>
 </div>
