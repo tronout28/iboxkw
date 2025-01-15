@@ -39,7 +39,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'role' => 'required|string|in:dealer,admin',
+            'role' => 'required|string|in:admin',
             'password' => 'required|string|confirmed',
         ]);
 

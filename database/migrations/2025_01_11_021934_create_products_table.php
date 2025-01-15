@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->enum('category', ['Iphone','Ipad','MacBook','Iwatch','Airpods','other']);
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->string('category')->nullable();
             $table->bigInteger('price');
             $table->string('image')->nullable();
             $table->enum('requested',['non-accepted','accepted','rejected'])->default('non-accepted');
@@ -25,6 +26,7 @@ return new class extends Migration
             
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
 
             $table->timestamps();
         });
