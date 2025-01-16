@@ -85,17 +85,17 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
+    
         $(document).ready(function () {
             $('#loginForm').on('submit', function (e) {
                 e.preventDefault();
-
+    
                 // Prepare the data
                 let email = $('#email').val();
                 let password = $('#password').val();
-
+    
                 $.ajax({
-                    url: '/login',  // Make sure this URL matches the route for login
+                    url: '/loginAdmin',  // Updated to use the loginAdmin route
                     type: 'POST',
                     data: {
                         email: email,
@@ -106,13 +106,13 @@
                         $('#responseMessage').html('Login successful! Redirecting...').css('color', 'green').show();
                         $('#errorText').text(''); // Clear previous error message
                         $('#responseMessage').css('background-color', '#d4edda'); // Green background for success
-
+    
                         // If login is successful, store the token in localStorage or cookies
                         localStorage.setItem('auth_token', response.token);
-
+    
                         // Redirect to home page after 1 second
                         setTimeout(function () {
-                            window.location.href = '/admin/dealer-admin';
+                            window.location.href = '/admin/dealer-admin';  // Redirect to the admin page
                         }, 1000);
                     },
                     error: function (xhr) {
@@ -128,13 +128,14 @@
                     }
                 });
             });
-
+    
             // Close error message when the "×" button is clicked
             $('#closeErrorMessage').on('click', function () {
                 $('#responseMessage').hide();
             });
         });
     </script>
+    
 </body>
 </html>
  
