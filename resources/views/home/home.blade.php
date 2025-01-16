@@ -57,7 +57,8 @@
 <div style="padding: 20px 150px;">
     @include('component.cardinfo')
 </div>
-
-
+    <footer>
+        @include('component.footer')
+    </footer>
 </body>
 </html>
