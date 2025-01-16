@@ -221,91 +221,104 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('/api/categories')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(categories => {
-                    const categorySelect = document.getElementById('category_id');
-                    categories.forEach(category => {
-                        const option = document.createElement('option');
-                        option.value = category.id;
-                        option.textContent = category.name_iphone; 
-                        categorySelect.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching categories:', error);
-                    alert('Failed to load categories. Please refresh the page.');
-                });
-
-            // Handle file input change
-            const fileInput = document.getElementById('image');
-            const fileLabel = document.querySelector('.file-upload-label span');
-            
-            fileInput.addEventListener('change', function() {
-                if (this.files[0]) {
-                    fileLabel.textContent = this.files[0].name;
-                } else {
-                    fileLabel.textContent = 'Click to upload or drag and drop';
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fetch categories to populate the category select
+        fetch('/api/categories')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            });
-            
-            document.addEventListener('DOMContentLoaded', function () {
-                fetch('/api/minuses')
-    .then(response => response.json())
-    .then(data => {
-        console.log('Minuses:', data); // Debugging
-        const selectElement = document.getElementById('minus');
-        data.forEach(minus => {
-            const option = document.createElement('option');
-            option.value = minus.id;
-            option.textContent = `${minus.minus_product} (${minus.minus_price} USD)`;
-            selectElement.appendChild(option);
-        });
-    })
-    .catch(error => {
-        console.error('Error fetching minus data:', error); // Log error
-    });
+                return response.json();
+            })
+            .then(categories => {
+                const categorySelect = document.getElementById('category_id');
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name_iphone; // assuming 'name_iphone' exists in the API
+                    categorySelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching categories:', error);
+                alert('Failed to load categories. Please refresh the page.');
             });
 
+        // Handle file input change
+        const fileInput = document.getElementById('image');
+        const fileLabel = document.querySelector('.file-upload-label span');
+        
+        fileInput.addEventListener('change', function() {
+            if (this.files[0]) {
+                fileLabel.textContent = this.files[0].name;
+            } else {
+                fileLabel.textContent = 'Click to upload or drag and drop';
+            }
+        });
+
+        // Fetch "minus" data when the category is selected
+        document.getElementById('category_id').addEventListener('change', function() {
+            const categoryId = this.value;
             
-            document.getElementById('productForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(this);
-                
-                fetch('/api/products', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            if (categoryId) {
+                fetch(`/api/minus/get-categorycategory_id=${categoryId}`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log('Data fetched from API:', data); // Debug response
+                        const selectElement = document.getElementById('minus');
+                        selectElement.innerHTML = ''; // Clear existing options
+
+                        // Populate the select element with "minus" items based on category
+                        data.forEach((minus) => {
+                            const option = document.createElement('option');
+                            option.value = minus.id; // Use minus ID as the value
+                            option.textContent = `${minus.minus_product} (${minus.minus_price} USD)`; // Display product name and price
+                            selectElement.appendChild(option);
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching minus data:', error); // Log any errors
+                    });
+            } else {
+                // Clear the minus select options if no category is selected
+                document.getElementById('minus').innerHTML = '';
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch('/api/products', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                    if (data.product) {
+                        window.location.href = '/products/' + data.product.id;
                     }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.message) {
-                        alert(data.message);
-                        if (data.product) {
-                            window.location.href = '/products/' + data.product.id;
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while submitting the product');
-                });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while submitting the product');
             });
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>

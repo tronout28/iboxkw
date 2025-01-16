@@ -36,12 +36,12 @@ Route::get('/artikel-admin', function () {
 });
 
 Route::get('/api/categories', [CategoryController::class, 'index']);
-Route::get('/api/minuses', [MinusController::class, 'index']);
+Route::get('/api/minuses/category/{category_id}', [MinusController::class, 'showMinusByCategory']);
 
 
 Route::get('/sell', function () {
     return view('sell.sell');
-})->name('sell');
+})->name('sell');   
 
 
 Route::post('/login', [AuthController::class, 'login']);
