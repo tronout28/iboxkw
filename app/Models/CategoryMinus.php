@@ -20,5 +20,4 @@ class CategoryMinus extends Model
     {
         return $this->belongsTo(Minus::class, 'minus_id');
     }
-
 }
