@@ -23,11 +23,12 @@ Route::get('/home', function () {
     return view('home.home'); 
 });
 
+Route::post('/loginAdmin', [AuthController::class, 'loginAdmin']);
+
+
 Route::get('/login-admin', function () {
     return view('admin.login.login'); 
 });
-
-
 
 Route::get('/artikel-admin', function () {
     return view('admin.artikel.artikel'); 

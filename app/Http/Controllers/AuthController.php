@@ -79,28 +79,28 @@ class AuthController extends Controller
         return response()->json(['token' => $token], 200);
     }
 
-    public function loginAdmin(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+        public function loginAdmin(Request $request)
+        {
+            $request->validate([
+                'email' => 'required|string|email',
+                'password' => 'required|string',
+            ]);
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            if (!Auth::attempt($request->only('email', 'password'))) {
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+
+            $user = $request->user();
+
+            if ($user->role !== 'admin') {
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+
+            $tokenResult = $user->createToken('Personal Access Token');
+            $token = $tokenResult->plainTextToken;
+
+            return response()->json(['token' => $token], 200);
         }
-
-        $user = $request->user();
-
-        if ($user->role !== 'admin') {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
-
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->plainTextToken;
-
-        return response()->json(['token' => $token], 200);
-    }
 
     public function logout(Request $request)
     {
