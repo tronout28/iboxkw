@@ -16,8 +16,9 @@ class CategoryMinus extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function minus()
+    public function minuses()
     {
-        return $this->belongsTo(Minus::class);
+        return $this->belongsTo(Minus::class, 'minus_id');
     }
+
 }

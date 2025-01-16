@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Minus;
+use App\Models\CategoryMinus;
 
 class MinusController extends Controller
 {
@@ -88,7 +89,7 @@ class MinusController extends Controller
 
     public function showMinusByCategory($category_id)
     {
-        $minuses = Minus::where('category_id', $category_id)->get();
+        $minuses = CategoryMinus::where('category_id', $category_id)->with('minuses')->get();
 
         return response()->json($minuses);
     }
