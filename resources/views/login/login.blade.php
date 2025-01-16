@@ -82,7 +82,6 @@
     </div>
 
     <script>
-        // Set up the CSRF token for AJAX requests
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -93,7 +92,7 @@
             $('#loginForm').on('submit', function (e) {
                 e.preventDefault();
 
-                // Prepare the data
+                    // Prepare the data
                 let email = $('#email').val();
                 let password = $('#password').val();
 
