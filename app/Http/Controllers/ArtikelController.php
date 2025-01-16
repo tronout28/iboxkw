@@ -60,7 +60,7 @@ class ArtikelController extends Controller
 
             // Menyimpan nama gambar ke database
             $artikel->image = $imageName;
-            $artikel->image_url = url('images-artikel/' . $imageName);
+            $artikel->image = url('images-artikel/' . $imageName);
 
             $artikel->save();
         }
@@ -153,7 +153,7 @@ class ArtikelController extends Controller
 
             // Update nama gambar di database
             $artikel->image = $imageName;
-            $artikel->image_url = url('images-artikel/' . $imageName);
+            $artikel->image = url('images-artikel/' . $imageName);
         }
 
         $artikel->save();

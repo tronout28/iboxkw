@@ -10,6 +10,17 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.tailwind.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .dataTables_wrapper .dataTables_paginate {
+            display: none !important;
+        }
+        .dataTables_wrapper .dataTables_info {
+            display: none !important;
+        }
+        .dataTables_wrapper .dataTables_length {
+            display: none !important;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100">
@@ -29,7 +40,7 @@
                     <table id="exampleTable" class="min-w-full bg-white">
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th class="w-16">No</th>
                                 <th>Title</th>
                                 <th>Subtitle</th>
                                 <th>Content</th>
@@ -99,35 +110,54 @@
             var table = $('#exampleTable').DataTable({
                 processing: true,
                 serverSide: true,
+                responsive: true,
                 ajax: '/get-artikel',
-                columns: [{
-                        data: 'no'
-                    },
+                paging: false,
+                searching: true,
+                info: false,
+                ordering: true,
+                order: [[0, 'asc']],
+                columns: [
                     {
-                        data: 'title'
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return meta.row + 1;
+                        },
+                        searchable: false,
+                        orderable: false
                     },
-                    {
-                        data: 'subtitle'
-                    },
-                    {
-                        data: 'content'
-                    },
-                    {
-                        data: 'image_url',
+                    { data: 'title' },
+                    { data: 'subtitle' },
+                    { 
+                        data: 'content',
                         render: function(data) {
-                            return `<img src="${data}" class="h-24 object-cover rounded-md" />`;
+                            return data.length > 100 ? data.substr(0, 100) + '...' : data;
                         }
+                    },
+                    {
+                        data: 'image',
+                        render: function(data) {
+                            return `<img src="${data}" class="h-24 w-32 object-cover rounded-md" alt="Article image"/>`;
+                        },
+                        orderable: false
                     },
                     {
                         data: null,
                         render: function(data, type, row) {
                             return `
-                            <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center" onclick="deleteArticle(${row.id})">
+                            <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center" 
+                                    onclick="deleteArticle(${row.id})">
                                 <i class="fas fa-trash mr-2"></i>Delete
                             </button>`;
-                        }
+                        },
+                        orderable: false
                     }
-                ]
+                ],
+                language: {
+                    search: "Search:",
+                    zeroRecords: 'No matching records found',
+                    emptyTable: 'No data available'
+                }
             });
 
             $('#articleForm').on('submit', function(e) {
@@ -147,6 +177,9 @@
                         alert('Artikel berhasil ditambahkan');
                         closeModal();
                         table.ajax.reload();
+                        $('#articleForm')[0].reset();
+                        $('#imagePreview').addClass('hidden');
+                        $('#preview').attr('src', '');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -176,6 +209,9 @@
 
         function openModal() {
             document.getElementById('articleModal').classList.remove('hidden');
+            document.getElementById('articleForm').reset();
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('preview').src = '';
         }
 
         function closeModal() {
@@ -184,15 +220,21 @@
 
         function previewImage(event) {
             const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = function() {
-                const preview = document.getElementById('preview');
-                const imagePreview = document.getElementById('imagePreview');
-                imagePreview.classList.remove('hidden');
-                preview.src = reader.result;
-            };
-            reader.readAsDataURL(file);
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const preview = document.getElementById('preview');
+                    const imagePreview = document.getElementById('imagePreview');
+                    imagePreview.classList.remove('hidden');
+                    preview.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            }
         }
+
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.previewImage = previewImage;
     </script>
 </body>
 
