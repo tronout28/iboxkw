@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -155,32 +156,33 @@
             .container {
                 padding: 1rem;
             }
-            
+
             .minuses-container {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="form-header">
             <h1>Add New Product</h1>
             <p>Complete the form below to add a new product to your inventory</p>
         </div>
-        
+
         <form id="productForm" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label class="form-label" for="name">Product Name</label>
-                <input type="text" class="form-control" id="name" name="name" required 
-                       placeholder="Enter product name">
+                <input type="text" class="form-control" id="name" name="name" required
+                    placeholder="Enter product name">
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="description">Description</label>
                 <textarea class="form-control" id="description" name="description" rows="4" required
-                          placeholder="Enter product description"></textarea>
+                    placeholder="Enter product description"></textarea>
             </div>
 
             <div class="form-group">
@@ -193,14 +195,14 @@
             <div class="form-group">
                 <label class="form-label" for="price">Price</label>
                 <input type="number" class="form-control" id="price" name="price" required
-                       placeholder="Enter price">
+                    placeholder="Enter price">
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="minus">Minus</label>
-                <select class="form-select" id="minus" name="minus">
-                    <!-- Options will be added dynamically -->
-                </select>
+                <label class="form-label">Select Minus Items</label>
+                <div id="minusSelection" class="minus-selection">
+                    <!-- Minus items will be added here dynamically -->
+                </div>
             </div>
 
             <div class="form-group">
@@ -221,104 +223,131 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Fetch categories to populate the category select
-        fetch('/api/categories')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(categories => {
-                const categorySelect = document.getElementById('category_id');
-                categories.forEach(category => {
-                    const option = document.createElement('option');
-                    option.value = category.id;
-                    option.textContent = category.name_iphone; // assuming 'name_iphone' exists in the API
-                    categorySelect.appendChild(option);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching categories:', error);
-                alert('Failed to load categories. Please refresh the page.');
-            });
-
-        // Handle file input change
-        const fileInput = document.getElementById('image');
-        const fileLabel = document.querySelector('.file-upload-label span');
-        
-        fileInput.addEventListener('change', function() {
-            if (this.files[0]) {
-                fileLabel.textContent = this.files[0].name;
-            } else {
-                fileLabel.textContent = 'Click to upload or drag and drop';
-            }
-        });
-
-        // Fetch "minus" data when the category is selected
-        document.getElementById('category_id').addEventListener('change', function() {
-            const categoryId = this.value;
-            
-            if (categoryId) {
-                fetch(`/api/minus/get-categorycategory_id=${categoryId}`)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log('Data fetched from API:', data); // Debug response
-                        const selectElement = document.getElementById('minus');
-                        selectElement.innerHTML = ''; // Clear existing options
-
-                        // Populate the select element with "minus" items based on category
-                        data.forEach((minus) => {
-                            const option = document.createElement('option');
-                            option.value = minus.id; // Use minus ID as the value
-                            option.textContent = `${minus.minus_product} (${minus.minus_price} USD)`; // Display product name and price
-                            selectElement.appendChild(option);
-                        });
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching minus data:', error); // Log any errors
-                    });
-            } else {
-                // Clear the minus select options if no category is selected
-                document.getElementById('minus').innerHTML = '';
-            }
-        });
-
-        // Handle form submission
-        document.getElementById('productForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            
-            fetch('/api/products', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.message) {
-                    alert(data.message);
-                    if (data.product) {
-                        window.location.href = '/products/' + data.product.id;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch categories to populate the category select
+            fetch('/api/categories')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
+                    return response.json();
+                })
+                .then(categories => {
+                    const categorySelect = document.getElementById('category_id');
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.id;
+                        option.textContent = category.name_iphone; // assuming 'name_iphone' exists in the API
+                        categorySelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching categories:', error);
+                    alert('Failed to load categories. Please refresh the page.');
+                });
+
+            // Handle file input change
+            const fileInput = document.getElementById('image');
+            const fileLabel = document.querySelector('.file-upload-label span');
+
+            fileInput.addEventListener('change', function() {
+                if (this.files[0]) {
+                    fileLabel.textContent = this.files[0].name;
+                } else {
+                    fileLabel.textContent = 'Click to upload or drag and drop';
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while submitting the product');
+            });
+
+            // Fetch "minus" data when the category is selected
+            document.getElementById('category_id').addEventListener('change', function() {
+                const categoryId = this.value;
+
+                if (categoryId) {
+                    fetch(`/api/minuses/category/${categoryId}`)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log('Data fetched from API:', data);
+                            const minusSelection = document.getElementById('minusSelection');
+                            minusSelection.innerHTML = '';
+
+                            if (Array.isArray(data) && data.length > 0) {
+                                data.forEach((minus) => {
+                                    const minusItem = document.createElement('div');
+                                    minusItem.className = 'minus-item';
+
+                                    minusItem.innerHTML = `
+                                        <input type="checkbox" 
+                                               name="minuses[]" 
+                                               value="${minus.id}" 
+                                               class="minus-checkbox"
+                                               id="minus-${minus.id}">
+                                        <div class="minus-details">
+                                            <label for="minus-${minus.id}">${minus.minus_product}</label>
+                                            <span class="minus-price">Rp ${minus.minus_price.toLocaleString()}</span>
+                                        </div>
+                                    `;
+
+                                    minusSelection.appendChild(minusItem);
+
+                                    // Add click event to highlight selected items
+                                    const checkbox = minusItem.querySelector('input[type="checkbox"]');
+                                    checkbox.addEventListener('change', function() {
+                                        minusItem.classList.toggle('selected-minus', this.checked);
+                                    });
+                                });
+                            } else {
+                                minusSelection.innerHTML = '<p>No minus available for this category</p>';
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching minus data:', error);
+                        });
+                } else {
+                    document.getElementById('minusSelection').innerHTML = '';
+                }
+            });
+
+            // Modified form submission to handle multiple minus
+            document.getElementById('productForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+
+                // Get all selected minus checkboxes
+                const selectedMinus = document.querySelectorAll('input[name="minuses[]"]:checked');
+
+                // Remove any existing minus entries from FormData
+                formData.delete('minuses[]');
+
+                // Add each selected minus to FormData
+                selectedMinus.forEach(checkbox => {
+                    formData.append('minuses[]', checkbox.value);
+                });
+
+                fetch('/api/products', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message) {
+                            alert(data.message);
+                            if (data.product) {
+                                window.location.href = '/products/' + data.product.id;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while submitting the product');
+                    });
             });
         });
-    });
-</script>
+    </script>
 
 </body>
+
 </html>
