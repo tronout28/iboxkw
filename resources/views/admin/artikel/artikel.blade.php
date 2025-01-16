@@ -113,7 +113,7 @@
                 responsive: true,
                 ajax: '/get-artikel',
                 paging: false,
-                searching: true,
+                searching: false,
                 info: false,
                 ordering: true,
                 order: [[0, 'asc']],
