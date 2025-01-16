@@ -72,22 +72,26 @@ class ArtikelController extends Controller
     
     public function destroy($id)
     {
+        // Cari artikel berdasarkan ID
         $artikel = Artikel::find($id);
-
+    
+        // Jika artikel tidak ditemukan
         if (!$artikel) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Artikel tidak ditemukan'
             ], 404);
         }
-
+    
         // Hapus gambar jika ada
         if ($artikel->image && file_exists(public_path('images-artikel/' . $artikel->image))) {
             unlink(public_path('images-artikel/' . $artikel->image));
         }
-
+    
+        // Hapus artikel
         $artikel->delete();
-
+    
+        // Kembalikan response sukses
         return response()->json([
             'status' => 'success',
             'message' => 'Artikel berhasil dihapus'
