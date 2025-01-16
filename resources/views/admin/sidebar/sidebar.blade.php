@@ -10,7 +10,7 @@
 
         <a href="{{ route('admin.dealer.dealer') }}" 
            class="block py-2.5 px-4 rounded flex items-center {{ Request::routeIs('admin.dealer.dealer') ? 'bg-blue-700' : 'hover:bg-blue-600' }}">
-            <i class="fas fa-mobile-alt mr-2"></i> Dealer
+            <i class="fas fa-mobile-alt mr-2"></i> Product
         </a>
 
         <a href="{{ route('admin.artikel.artikel') }}" 

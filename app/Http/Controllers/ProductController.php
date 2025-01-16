@@ -4,12 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Minus;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
     public function index()
+    {
+        return view('admin.dealer.dealer');
+    }
+
+    // For AJAX DataTable
+    public function getProducts()
     {
         $products = Product::all();
         return response()->json($products);
@@ -20,18 +27,38 @@ class ProductController extends Controller
         $product = Product::with('minuses')->find($id);
 
         if (!$product) {
-            // Jika produk tidak ditemukan, redirect ke halaman lain dengan pesan error
             return redirect('/home')->with('error', 'Product not found');
         }
 
-        // Hitung total_price (harga produk dikurangi harga minus)
+        // Calculate total_price (product price minus the sum of minus prices)
         $product->total_price = $product->price - $product->minuses->sum('minus_price');
+
+        // Return the response based on the request type (JSON or View)
         if (request()->wantsJson()) {
             return response()->json($product);
         }
+
         return view('checkout.checkout', compact('product'));
     }
 
+    public function showAdmin($id)
+    {
+        $dealer = Product::with('minuses')->find($id); 
+
+        if (!$dealer) {
+            return redirect('/dealer/admin')->with('error', 'Dealer not found');
+        }
+
+        // Calculate total_price (dealer price minus the sum of minus prices)
+        $dealer->total_price = $dealer->price - $dealer->minuses->sum('minus_price');
+
+        // Return the response based on the request type (JSON or View)
+        if (request()->wantsJson()) {
+            return response()->json($dealer);
+        }
+
+        return view('admin.dealer.detail', compact('dealer'));
+    }
 
     public function store(Request $request)
     {
@@ -48,14 +75,14 @@ class ProductController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:6000',
         ]);
 
-        // Cari kategori
+        // Find the category
         $category = \App\Models\Category::find($request->category_id);
 
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
 
-        // Simpan produk
+        // Save the product
         $product = new Product([
             'name' => $request->name,
             'description' => $request->description,
@@ -67,23 +94,23 @@ class ProductController extends Controller
             'user_id' => $request->user_id,
         ]);
 
-        // Menangani upload gambar
+        // Handle image upload
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->extension();
             $image->move(public_path('images-product'), $imageName);
 
-            // Simpan nama dan URL gambar ke database
+            // Save the image name and URL
             $product->image = $imageName;
             $product->image_url = url('images-product/' . $imageName);
         }
 
         $product->save();
 
-        // Simpan data ke tabel minus_products
+        // Save data to minus_products table
         $totalPrice = $request->price;
         if ($request->has('minuses')) {
-            $minuses = \App\Models\Minus::whereIn('id', $request->minuses)->get();
+            $minuses = Minus::whereIn('id', $request->minuses)->get();
 
             foreach ($minuses as $minus) {
                 $totalPrice -= $minus->minus_price;
@@ -103,91 +130,35 @@ class ProductController extends Controller
         ], 201);
     }
 
+    public function edit($id)
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return redirect()->route('admin.dealer.index')->with('error', 'Product not found');
+        }
+
+        return view('admin.dealer.edit', compact('product'));
+    }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'nullable|string',
-            'description' => 'nullable|string',
-            'category_id' => 'nullable|numeric|exists:categories,id',
             'price' => 'nullable|numeric',
-            'requested' => ['nullable', Rule::in(['non-accepted', 'accepted', 'rejected'])],
             'status' => ['nullable', Rule::in(['active', 'inactive'])],
-            'user_id' => 'nullable|numeric',
-            'minuses' => 'array',
-            'minuses.*' => 'numeric|exists:minuses,id',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:6000',
+            'requested' => ['nullable', Rule::in(['non-accepted', 'accepted', 'rejected'])],
         ]);
 
         $product = Product::find($id);
 
         if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
+            return redirect()->route('admin.dealer.index')->with('error', 'Product not found');
         }
 
-        // Update data produk
-        $product->update($request->only([
-            'name',
-            'description',
-            'price',
-            'requested',
-            'status',
-            'user_id',
-        ]));
+        $product->update($request->only(['price', 'status', 'requested']));
 
-        // Update kategori jika diberikan
-        if ($request->has('category_id')) {
-            $category = \App\Models\Category::find($request->category_id);
-            if ($category) {
-                $product->category_id = $category->id;
-                $product->category = $category->name_iphone;
-            }
-        }
-
-        // Menangani upload gambar
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->extension();
-            $image->move(public_path('images-product'), $imageName);
-
-            // Hapus gambar lama jika ada
-            if ($product->image && file_exists(public_path('images-product/' . $product->image))) {
-                unlink(public_path('images-product/' . $product->image));
-            }
-
-            // Update nama dan URL gambar di database
-            $product->image = $imageName;
-            $product->image_url = url('images-product/' . $imageName);
-        }
-
-        $product->save();
-
-        // Hapus data lama di tabel minus_products
-        DB::table('minus_products')->where('product_id', $product->id)->delete();
-
-        // Tambahkan minus baru jika diberikan
-        $totalPrice = $product->price;
-        if ($request->has('minuses') && is_array($request->minuses)) {
-            $minuses = \App\Models\Minus::whereIn('id', $request->minuses)->get();
-
-            foreach ($minuses as $minus) {
-                $totalPrice -= $minus->minus_price;
-
-                DB::table('minus_products')->insert([
-                    'product_id' => $product->id,
-                    'minus_id' => $minus->id,
-                    'total_price' => $totalPrice,
-                ]);
-            }
-        }
-
-        return response()->json([
-            'message' => 'Successfully updated product with minuses and image!',
-            'product' => $product,
-            'total_price' => $totalPrice,
-        ]);
+        return redirect()->route('admin.dealer.index')->with('success', 'Product updated successfully');
     }
-
 
     public function destroy($id)
     {
@@ -197,17 +168,13 @@ class ProductController extends Controller
             return response()->json(['message' => 'Product not found'], 404);
         }
 
-        $hasMinus = DB::table('minus_products')->where('product_id', $product->id)->exists();
-        if ($hasMinus) {
-            DB::table('minus_products')->where('product_id', $product->id)->delete();
-        }
-
+        DB::table('minus_products')->where('product_id', $product->id)->delete();
         $product->delete();
 
         return response()->json(['message' => 'Successfully deleted product and related minuses!']);
     }
 
-    public function insertimage(Request $request, $id)
+    public function insertImage(Request $request, $id)
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:6000',
@@ -219,32 +186,28 @@ class ProductController extends Controller
             return response()->json(['message' => 'Product not found'], 404);
         }
 
-        // Menangani upload gambar
+        // Handle image upload
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->extension();
             $image->move(public_path('images-product'), $imageName);
 
-            // Jika ada gambar sebelumnya, hapus gambar lama
+            // If an old image exists, remove it
             if ($product->image && file_exists(public_path('images-product/' . $product->image))) {
                 unlink(public_path('images-product/' . $product->image));
             }
 
-            // Menyimpan nama gambar ke database
+            // Save the new image name to the database
             $product->image = $imageName;
-            $product->image = url('images-product/' . $product->image);
+            $product->image_url = url('images-product/' . $imageName);
 
             $product->save();
-        }
-
-        if (!$product->image) {
-            return response()->json(['message' => 'Failed to upload image!'], 500);
         }
 
         return response()->json(['message' => 'Successfully uploaded image!']);
     }
 
-    public function showProductbyCategory($category)
+    public function showProductByCategory($category)
     {
         $products = Product::where('category', $category)->get();
         return response()->json($products);
