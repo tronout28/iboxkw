@@ -134,12 +134,14 @@
                 </svg>
             </div>
 
-            <!-- Icon Links -->
             <div class="icon-links">
-                <a href="#" title="Pilih Toko">📍</a>
-                <a href="#" title="Akun">👤</a>
-                <a href="#" title="Keranjang Belanja">🛒</a>
-            </div>
+    <a href="{{ route('sell') }}">
+        <i class="fa fa-shopping-bag fa-lg" style="color: #000;"></i>
+    </a>
+</div>
+
+
+
         </div>
 
         <!-- Navigation Menu -->

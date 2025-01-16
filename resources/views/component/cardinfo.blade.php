@@ -67,12 +67,18 @@
         }
 
         .card-description {
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #4b5563;
-        }
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #4b5563;
+    max-height: 60px;
+    max-width: fit-content;
+    overflow: hidden; /* Potong konten yang melebihi batas tinggi */
+    text-overflow: ellipsis; /* Tambahkan "..." jika teks terlalu panjang */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Batasi ke 3 baris */
+    -webkit-box-orient: vertical; /* Mengaktifkan line clamp */
+}
 
-        /* Loading State */
         .loading {
             text-align: center;
             padding: 2rem;
@@ -80,7 +86,6 @@
             font-size: 1.125rem;
         }
 
-        /* Error State */
         .error {
             text-align: center;
             padding: 2rem;
@@ -92,7 +97,6 @@
             max-width: 600px;
         }
 
-        /* Feature Cards */
         .feature-cards {
             display: grid;
             grid-template-columns: repeat(1, 1fr);
@@ -125,46 +129,6 @@
     </style>
 </head>
 <body>
-    <!-- Feature Cards Section -->
-    <div class="feature-cards">
-        <!-- Pickup Card -->
-        <div class="info-card">
-            <div class="card-content">
-                <h3 class="card-title text-gray-500">PICKUP</h3>
-                <p class="card-heading text-gray-800">Kirim dan ambil.</p>
-                <p class="card-description text-gray-800">Belanja online dan bebas biaya kirim.</p>
-            </div>
-        </div>
-
-        <!-- Financing Card -->
-        <div class="info-card">
-            <div class="card-content">
-                <h3 class="card-title text-blue-500">FINANCING</h3>
-                <p class="card-heading text-gray-800">Dapatkan harga spesial dan cicilan 0%</p>
-                <p class="card-description text-blue-500">untuk produk-produk Apple.</p>
-            </div>
-        </div>
-
-        <!-- Experience Days Card -->
-        <div class="info-card">
-            <div class="card-content">
-                <h3 class="card-title text-gray-500">IBOX EXPERIENCE DAYS</h3>
-                <p class="card-heading text-gray-800">Maksimalkan penggunaan produk Apple anda</p>
-                <p class="card-description text-gray-400">bersama Apple expert</p>
-            </div>
-        </div>
-
-        <!-- Sale Card -->
-        <div class="info-card">
-            <div class="card-content">
-                <h3 class="card-title text-green-500">SALE</h3>
-                <p class="card-heading">
-                    <span class="text-green-500">Penawaran terbaik hari ini</span>
-                    <span class="text-gray-800">untuk Belanja Online dan Click & PickUp</span>
-                </p>
-            </div>
-        </div>
-    </div>
 
     <!-- Articles Section -->
     <div id="loading" class="loading">Loading articles...</div>
@@ -182,7 +146,7 @@
         errorElement.style.display = 'none';
 
         const response = await fetch('/get-artikel');
-        const responseText = await response.text(); // Get raw response text
+        const responseText = await response.text(); 
         
         console.log('Raw response:', responseText); // Debug log
         
@@ -207,7 +171,7 @@
 }
 
         // Function to display articles in the UI
-        function displayArticles(articles) {
+                function displayArticles(articles) {
             const container = document.getElementById('articles-container');
             if (!container) {
                 console.error('Container element not found');
@@ -221,16 +185,18 @@
                 articleElement.className = 'info-card';
                 
                 articleElement.innerHTML = `
+                <a href="/artikel/${article.id}" style="text-decoration: none; color: inherit;">
                     <div class="card-content">
                         <h3 class="card-title text-gray-500">${escapeHtml(article.title)}</h3>
                         <p class="card-heading text-gray-800">${escapeHtml(article.subtitle || '')}</p>
-                        <p class="card-description text-gray-800">${escapeHtml(article.content)}</p>
+                        <p class="card-description text-gray-800">${escapeHtml(truncateText(article.content, 150))}</p>
                     </div>
                 `;
                 
                 container.appendChild(articleElement);
             });
         }
+
 
         // Helper function to escape HTML and prevent XSS
         function escapeHtml(unsafe) {
@@ -244,6 +210,14 @@
 
         // Call the fetch function when the page loads
         document.addEventListener('DOMContentLoaded', fetchArticles);
+        // Function to truncate text to a specific character limit
+        function truncateText(text, limit) {
+            if (text.length > limit) {
+                return text.substring(0, limit) + '...';
+            }
+            return text;
+        }
+
     </script>
 </body>
 </html>
