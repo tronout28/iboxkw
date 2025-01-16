@@ -113,7 +113,7 @@
 
                         // Redirect to home page after 1 second
                         setTimeout(function () {
-                            window.location.href = '/dashboard-admin';
+                            window.location.href = '/admin/dealer-admin';
                         }, 1000);
                     },
                     error: function (xhr) {

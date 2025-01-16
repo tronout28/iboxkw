@@ -36,9 +36,7 @@
                             @endif
                         </div>
 
-                        <!-- Details Grid -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Left Column -->
                             <div class="space-y-6">
                                 <div>
                                     <h3 class="text-sm font-medium text-gray-500">Name</h3>
