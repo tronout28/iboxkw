@@ -23,15 +23,15 @@
     font-size: 16px;
 }
 .products-grid {
-    display: flex; /* Susunan horizontal */
-    gap: 20px; /* Jarak antar elemen */
-    overflow-x: auto; /* Scroll horizontal */
+    display: flex;
+    gap: 20px; 
+    overflow-x: auto;
     padding-top: 20px;
     padding-bottom: 20px;
-    padding-left: 150px; /* Padding kiri */
-    padding-right: 150px; /* Padding kanan */
-    scroll-behavior: smooth; /* Efek scroll mulus */
-    white-space: nowrap; /* Mencegah elemen turun ke baris berikutnya */
+    padding-left: 150px;
+    padding-right: 150px;
+    scroll-behavior: smooth;
+    white-space: nowrap;
 }
 
 
