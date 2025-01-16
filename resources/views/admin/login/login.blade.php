@@ -38,8 +38,7 @@
         <div class="container">
             <div class="left-side">
                 <div class="left-content">
-                    <h2>Easy To Navigate<br>And Earn Rewards</h2>
-                    <p>Now you can make reservations<br>and compete against other users.</p>
+                    <h2>Login Sebagai admin</h2>
                 </div>
             </div>
             <div class="right-side">

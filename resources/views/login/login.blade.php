@@ -38,15 +38,14 @@
         <div class="container">
             <div class="left-side">
                 <div class="left-content">
-                    <h2>Easy To Navigate<br>And Earn Rewards</h2>
-                    <p>Now you can make reservations<br>and compete against other users.</p>
+                    <h2>Login Sebagai User</h2>
                 </div>
             </div>
             <div class="right-side">
                 <div class="login-box">
           
                     <h1>Hello Again!</h1>
-                    <p class="subtitle">Aliquam consectetur et tincidunt praesent enim massa pellentesque velit odio neque</p>
+                    <p class="subtitle">ini user</p>
 
                     <!-- Error Message Container -->
                     <div id="responseMessage" class="error-message-container">
