@@ -38,51 +38,70 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
-            'category' => ['required', Rule::in(['Iphone', 'Ipad', 'MacBook', 'Iwatch', 'Airpods', 'other'])],
+            'category_id' => 'required|numeric|exists:categories,id',
             'price' => 'required|numeric',
             'requested' => ['nullable', Rule::in(['non-accepted', 'accepted', 'rejected'])],
             'status' => ['nullable', Rule::in(['active', 'inactive'])],
             'user_id' => 'nullable|numeric',
             'minuses' => 'array',
             'minuses.*' => 'numeric|exists:minuses,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:6000',
         ]);
 
+        // Cari kategori
+        $category = \App\Models\Category::find($request->category_id);
+
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+
+        // Simpan produk
         $product = new Product([
             'name' => $request->name,
             'description' => $request->description,
-            'category' => $request->category,
+            'category_id' => $request->category_id,
+            'category' => $category->name_iphone,
             'price' => $request->price,
             'requested' => $request->requested,
             'status' => $request->status,
             'user_id' => $request->user_id,
         ]);
 
+        // Menangani upload gambar
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->extension();
+            $image->move(public_path('images-product'), $imageName);
+
+            // Simpan nama dan URL gambar ke database
+            $product->image = $imageName;
+            $product->image_url = url('images-product/' . $imageName);
+        }
+
         $product->save();
 
         // Simpan data ke tabel minus_products
-        $totalPrice = $request->price; // Mulai dari harga produk
+        $totalPrice = $request->price;
         if ($request->has('minuses')) {
-            foreach ($request->minuses as $minus_id) {
-                $minus = \App\Models\Minus::find($minus_id);
+            $minuses = \App\Models\Minus::whereIn('id', $request->minuses)->get();
 
-                // Tambahkan harga minus ke total
+            foreach ($minuses as $minus) {
                 $totalPrice -= $minus->minus_price;
 
-                // Simpan relasi ke tabel minus_products
                 DB::table('minus_products')->insert([
                     'product_id' => $product->id,
                     'minus_id' => $minus->id,
-                    'total_price' => $totalPrice, // Total harga sampai titik ini
+                    'total_price' => $totalPrice,
                 ]);
             }
         }
 
         return response()->json([
-            'message' => 'Successfully created product with minuses!',
+            'message' => 'Successfully created product with minuses and image!',
+            'product' => $product,
             'total_price' => $totalPrice,
         ], 201);
     }
-
 
 
     public function update(Request $request, $id)
@@ -90,13 +109,14 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'nullable|string',
             'description' => 'nullable|string',
-            'category' => ['nullable', Rule::in(['Iphone', 'Ipad', 'MacBook', 'Iwatch', 'Airpods', 'other'])],
+            'category_id' => 'nullable|numeric|exists:categories,id',
             'price' => 'nullable|numeric',
             'requested' => ['nullable', Rule::in(['non-accepted', 'accepted', 'rejected'])],
             'status' => ['nullable', Rule::in(['active', 'inactive'])],
             'user_id' => 'nullable|numeric',
-            'minuses' => 'array', // Validasi bahwa minuses adalah array
-            'minuses.*' => 'numeric|exists:minuses,id', // Setiap elemen harus berupa ID dari tabel minuses
+            'minuses' => 'array',
+            'minuses.*' => 'numeric|exists:minuses,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:6000',
         ]);
 
         $product = Product::find($id);
@@ -109,41 +129,65 @@ class ProductController extends Controller
         $product->update($request->only([
             'name',
             'description',
-            'category',
             'price',
             'requested',
             'status',
             'user_id',
         ]));
 
-        // Hapus data lama di tabel minus_products (jika ada)
+        // Update kategori jika diberikan
+        if ($request->has('category_id')) {
+            $category = \App\Models\Category::find($request->category_id);
+            if ($category) {
+                $product->category_id = $category->id;
+                $product->category = $category->name_iphone;
+            }
+        }
+
+        // Menangani upload gambar
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->extension();
+            $image->move(public_path('images-product'), $imageName);
+
+            // Hapus gambar lama jika ada
+            if ($product->image && file_exists(public_path('images-product/' . $product->image))) {
+                unlink(public_path('images-product/' . $product->image));
+            }
+
+            // Update nama dan URL gambar di database
+            $product->image = $imageName;
+            $product->image_url = url('images-product/' . $imageName);
+        }
+
+        $product->save();
+
+        // Hapus data lama di tabel minus_products
         DB::table('minus_products')->where('product_id', $product->id)->delete();
 
         // Tambahkan minus baru jika diberikan
         $totalPrice = $product->price;
         if ($request->has('minuses') && is_array($request->minuses)) {
-            foreach ($request->minuses as $minus_id) {
-                $minus = \App\Models\Minus::find($minus_id);
+            $minuses = \App\Models\Minus::whereIn('id', $request->minuses)->get();
 
-                if ($minus) {
-                    // Tambahkan harga minus ke total
-                    $totalPrice += $minus->minus_price;
+            foreach ($minuses as $minus) {
+                $totalPrice -= $minus->minus_price;
 
-                    // Simpan relasi ke tabel minus_products
-                    DB::table('minus_products')->insert([
-                        'product_id' => $product->id,
-                        'minus_id' => $minus->id,
-                        'total_price' => $totalPrice,
-                    ]);
-                }
+                DB::table('minus_products')->insert([
+                    'product_id' => $product->id,
+                    'minus_id' => $minus->id,
+                    'total_price' => $totalPrice,
+                ]);
             }
         }
 
         return response()->json([
-            'message' => 'Successfully updated product with minuses!',
+            'message' => 'Successfully updated product with minuses and image!',
+            'product' => $product,
             'total_price' => $totalPrice,
         ]);
     }
+
 
     public function destroy($id)
     {
@@ -198,5 +242,11 @@ class ProductController extends Controller
         }
 
         return response()->json(['message' => 'Successfully uploaded image!']);
+    }
+
+    public function showProductbyCategory($category)
+    {
+        $products = Product::where('category', $category)->get();
+        return response()->json($products);
     }
 }

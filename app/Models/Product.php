@@ -9,6 +9,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
+        'category_id',
         'category',
         'price',
         'image',
@@ -30,5 +31,10 @@ class Product extends Model
     public function minusProducts()
     {
         return $this->hasMany(MinusProduct::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

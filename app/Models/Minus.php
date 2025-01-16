@@ -15,5 +15,10 @@ class Minus extends Model
     {
         return $this->belongsToMany(Product::class, 'minus_products', 'minus_id', 'product_id');
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
     
 }

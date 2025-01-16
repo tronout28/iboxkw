@@ -86,6 +86,11 @@ class MinusController extends Controller
         }
     }
 
+    public function showMinusByCategory($category_id)
+    {
+        $minuses = Minus::where('category_id', $category_id)->get();
 
+        return response()->json($minuses);
+    }
 
 }
