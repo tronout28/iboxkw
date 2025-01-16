@@ -118,11 +118,17 @@
                     { data: 'image', render: function (data) {
                         return `<img src="${data}" class="h-24 object-cover rounded-md" />`;
                     }},
-                    { data: 'action', render: function (data, type, row) {
+                    {
+                    data: 'action',
+                    render: function (data, type, row) {
                         return `
-                            <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" onclick="deleteArticle(${row.id})">Delete</button>
+                            <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center" onclick="deleteArticle(${row.id})">
+                                <i class="fas fa-trash mr-2"></i>Delete
+                            </button>
                         `;
-                    }},
+                    }
+                }
+
                 ]
             });
 
@@ -188,14 +194,33 @@
                 success: function(response) {
                     alert('Artikel berhasil ditambahkan');
                     closeModal();
+                    $('#exampleTable').DataTable().ajax.reload(); // Reload table after adding
                 },
                 error: function(xhr, status, error) {
                     alert('Terjadi kesalahan: ' + error);
                 }
             });
         });
-    </script>
 
-    
+        function deleteArticle(id) {
+    console.log("Deleting article with ID:", id);  // Verifikasi ID di sini
+    if (confirm('Are you sure you want to delete this article?')) {
+        $.ajax({
+            url: '/artikels/' + id,  // Pastikan URL ini sesuai dengan rute yang ada
+            type: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')  // Pastikan CSRF token ada
+            },
+            success: function(response) {
+                alert(response.message);  // Tampilkan pesan sukses atau error
+                $('#exampleTable').DataTable().ajax.reload();  // Reload DataTable setelah penghapusan
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred: ' + error);  // Tampilkan pesan error jika ada masalah
+            }
+        });
+    }
+}
+    </script>
 </body>
 </html>

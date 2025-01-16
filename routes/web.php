@@ -54,6 +54,7 @@ Route::get('/admin/dealer/{id}/detail', [ProductController::class, 'showAdmin'])
 Route::get('/admin/dealer/{id}/edit', [ProductController::class, 'edit'])->name('admin.dealer.edit');
 Route::put('/admin/dealer/{id}/update', [ProductController::class, 'update'])->name('admin.dealer.update');
 Route::get('/admin/dealer', [ProductController::class, 'index'])->name('admin.dealer.index');
+Route::delete('/artikels/{id}', [ArtikelController::class, 'destroy']);
 
 Route::get('/artikel/{id}', [ArtikelController::class, 'show']);
 Route::post('/api/products', [ProductController::class, 'store']);
