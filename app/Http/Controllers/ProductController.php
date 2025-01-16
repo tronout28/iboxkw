@@ -22,6 +22,16 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    public function getFilteredProducts()
+    {
+        $products = Product::where('requested', 'accepted')
+            ->where('status', 'active')
+            ->get();
+
+        return response()->json($products);
+    }
+
+
     public function show($id)
     {
         $product = Product::with('minuses')->find($id);
@@ -43,7 +53,7 @@ class ProductController extends Controller
 
     public function showAdmin($id)
     {
-        $dealer = Product::with('minuses')->find($id); 
+        $dealer = Product::with('minuses')->find($id);
 
         if (!$dealer) {
             return redirect('/dealer/admin')->with('error', 'Dealer not found');
