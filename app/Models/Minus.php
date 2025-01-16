@@ -20,5 +20,9 @@ class Minus extends Model
     {
         return $this->belongsTo(Category::class);
     }
-    
+
+    public function categoryMinus()
+    {
+        return $this->hasMany(CategoryMinus::class);
+    }
 }

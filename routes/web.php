@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArtikelController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MinusController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -33,12 +35,19 @@ Route::get('/artikel-admin', function () {
     return view('admin.artikel.artikel'); 
 });
 
+Route::get('/api/categories', [CategoryController::class, 'index']);
+Route::get('/api/minuses/category/{category_id}', [MinusController::class, 'showMinusByCategory']);
+
+Route::get('/sell', function () {
+    return view('sell.sell');
+})->name('sell');   
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/api/products', [ProductController::class, 'index']);
 Route::get('/get-artikel', [ArtikelController::class, 'index']);
 Route::post('/artikel', [ArtikelController::class, 'store']);
+
 Route::get('/products', [ProductController::class, 'getProducts'])->name('products.data');
 Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 Route::get('/admin/dealer/{id}/detail', [ProductController::class, 'showAdmin'])->name('admin.dealer.detail');
@@ -47,6 +56,8 @@ Route::put('/admin/dealer/{id}/update', [ProductController::class, 'update'])->n
 Route::get('/admin/dealer', [ProductController::class, 'index'])->name('admin.dealer.index');
 Route::delete('/artikels/{id}', [ArtikelController::class, 'destroy']);
 
+Route::get('/artikel/{id}', [ArtikelController::class, 'show']);
+Route::post('/api/products', [ProductController::class, 'store']);
 
 Route::prefix('admin')->group(function () {
     Route::view('/dashboard-admin', 'admin.dashboard.dashboard')->name('admin.dashboard.dashboard');

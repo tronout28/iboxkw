@@ -26,17 +26,18 @@ Route::group(['prefix' => '/product'], function () {
     });
 });
 
-Route::group(['prefix' => '/minus'], function () {
-    Route::get('/', [MinusController::class, 'index']);
-    Route::get('/get-minus/{id}', [MinusController::class, 'show']);
-    Route::get('/get-product/{id}', [MinusController::class, 'showProducts']);
-
-    Route::group(['middleware' => ['auth:sanctum', 'role:admin']], function () {
-        Route::post('/store', [MinusController::class, 'store']);
-        Route::put('/update/{id}', [MinusController::class, 'update']);
-        Route::delete('/delete/{id}', [MinusController::class, 'destroy']);
+    Route::group(['prefix' => '/minus'], function () {
+        Route::get('/', [MinusController::class, 'index']);
+        Route::get('/get-minus/{id}', [MinusController::class, 'show']);
+        Route::get('/get-product/{id}', [MinusController::class, 'showProducts']);
+        Route::get('/get-category/{id}', [MinusController::class, 'showMinusByCategory']);
+        
+        Route::group(['middleware' => ['auth:sanctum', 'role:admin']], function () {
+            Route::post('/store', [MinusController::class, 'store']);
+            Route::put('/update/{id}', [MinusController::class, 'update']);
+            Route::delete('/delete/{id}', [MinusController::class, 'destroy']);
+        });
     });
-});
 
 Route::group(['prefix' => '/artikel'], function () {
     Route::get('/', [ArtikelController::class, 'index']);

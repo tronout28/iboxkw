@@ -27,9 +27,11 @@ class ArtikelController extends Controller
             ], 404);
         }
 
+        return view('artikel.artikel', compact('artikel'));
+
         return response()->json([
             'status' => 'success',
-            'data' => $artikel
+            'data' => $artikel 
         ]);
     }
 
