@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.tailwind.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body class="bg-gray-100">
     <div class="flex min-h-screen">
         @include('admin.sidebar.sidebar')
@@ -35,8 +37,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
@@ -52,21 +53,21 @@
                         <label class="block text-sm font-medium text-gray-700">Title</label>
                         <input type="text" name="title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Subtitle</label>
                         <input type="text" name="subtitle" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Content</label>
                         <textarea name="content" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Image</label>
                         <div class="mt-1 flex items-center">
-                            <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="previewImage(event)">
+                            <input type="file" id="imageInput" name="image" accept="image/*" class="hidden" onchange="previewImage(event)">
                             <label for="imageInput" class="cursor-pointer px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">
                                 Choose File
                             </label>
@@ -94,67 +95,83 @@
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.tailwind.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <script>
-        $(document).ready(function () {
-            // Initialize DataTable
+        $(document).ready(function() {
             var table = $('#exampleTable').DataTable({
-                responsive: true,
-                pageLength: 5,
-                language: {
-                    search: "Search:",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                    paginate: {
-                        first: "First",
-                        last: "Last",
-                        next: "Next",
-                        previous: "Previous"
-                    }
-                },
-                columns: [
-                    { data: 'no' },
-                    { data: 'title' },
-                    { data: 'subtitle' },
-                    { data: 'content' },
-                    { data: 'image', render: function (data) {
-                        return `<img src="${data}" class="h-24 object-cover rounded-md" />`;
-                    }},
+                processing: true,
+                serverSide: true,
+                ajax: '/get-artikel',
+                columns: [{
+                        data: 'no'
+                    },
                     {
-                    data: 'action',
-                    render: function (data, type, row) {
-                        return `
+                        data: 'title'
+                    },
+                    {
+                        data: 'subtitle'
+                    },
+                    {
+                        data: 'content'
+                    },
+                    {
+                        data: 'image_url',
+                        render: function(data) {
+                            return `<img src="${data}" class="h-24 object-cover rounded-md" />`;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
                             <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center" onclick="deleteArticle(${row.id})">
                                 <i class="fas fa-trash mr-2"></i>Delete
-                            </button>
-                        `;
+                            </button>`;
+                        }
                     }
-                }
-
                 ]
             });
 
-            $.ajax({
-                url: '/get-artikel', 
-                type: 'GET',
-                success: function (response) {
-                    if (response.status === 'success') {
-                        let artikels = response.data;
-                        let no = 1;
-                        artikels.forEach(function (artikel) {
-                            table.row.add({
-                                no: no++,
-                                title: artikel.title,
-                                subtitle: artikel.subtitle,
-                                content: artikel.content,
-                                image: artikel.image_url, 
-                                action: ''
-                            }).draw();
-                        });
+            $('#articleForm').on('submit', function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '/artikel',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        alert('Artikel berhasil ditambahkan');
+                        closeModal();
+                        table.ajax.reload();
+                    },
+                    error: function(xhr) {
+                        alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
-                },
-                error: function (xhr, status, error) {
-                    alert('Terjadi kesalahan: ' + error);
-                }
+                });
             });
+
+            window.deleteArticle = function(id) {
+                if (!confirm('Apakah Anda yakin ingin menghapus artikel ini?')) return;
+
+                $.ajax({
+                    url: `/artikels/${id}`,
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        alert('Artikel berhasil dihapus');
+                        table.ajax.reload();
+                    },
+                    error: function(xhr) {
+                        alert('Gagal menghapus artikel: ' + xhr.responseText);
+                    }
+                });
+            };
         });
 
         function openModal() {
@@ -168,7 +185,7 @@
         function previewImage(event) {
             const file = event.target.files[0];
             const reader = new FileReader();
-            reader.onload = function () {
+            reader.onload = function() {
                 const preview = document.getElementById('preview');
                 const imagePreview = document.getElementById('imagePreview');
                 imagePreview.classList.remove('hidden');
@@ -176,51 +193,7 @@
             };
             reader.readAsDataURL(file);
         }
-
-        // Handle form submission
-        $('#articleForm').on('submit', function(e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-
-            $.ajax({
-                url: '/artikel', // Your backend endpoint for storing articles
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    alert('Artikel berhasil ditambahkan');
-                    closeModal();
-                    $('#exampleTable').DataTable().ajax.reload(); // Reload table after adding
-                },
-                error: function(xhr, status, error) {
-                    alert('Terjadi kesalahan: ' + error);
-                }
-            });
-        });
-
-        function deleteArticle(id) {
-    console.log("Deleting article with ID:", id);  // Verifikasi ID di sini
-    if (confirm('Are you sure you want to delete this article?')) {
-        $.ajax({
-            url: '/artikels/' + id,  // Pastikan URL ini sesuai dengan rute yang ada
-            type: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')  // Pastikan CSRF token ada
-            },
-            success: function(response) {
-                alert(response.message);  // Tampilkan pesan sukses atau error
-                $('#exampleTable').DataTable().ajax.reload();  // Reload DataTable setelah penghapusan
-            },
-            error: function(xhr, status, error) {
-                alert('An error occurred: ' + error);  // Tampilkan pesan error jika ada masalah
-            }
-        });
-    }
-}
     </script>
 </body>
+
 </html>
