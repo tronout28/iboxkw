@@ -36,7 +36,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Data will be dynamically added here -->
                         </tbody>
                     </table>
                 </div>
@@ -44,7 +43,6 @@
         </div>
     </div>
 
-    <!-- Modal -->
     <div id="articleModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="mt-3">
@@ -128,7 +126,6 @@
                 ]
             });
 
-            // Fetch and display articles
             $.ajax({
                 url: '/get-artikel', 
                 type: 'GET',
@@ -191,7 +188,6 @@
                 success: function(response) {
                     alert('Artikel berhasil ditambahkan');
                     closeModal();
-                    // Optionally refresh the table
                 },
                 error: function(xhr, status, error) {
                     alert('Terjadi kesalahan: ' + error);
@@ -199,5 +195,7 @@
             });
         });
     </script>
+
+    
 </body>
 </html>

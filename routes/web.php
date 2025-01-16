@@ -39,6 +39,12 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/api/products', [ProductController::class, 'index']);
 Route::get('/get-artikel', [ArtikelController::class, 'index']);
 Route::post('/artikel', [ArtikelController::class, 'store']);
+Route::get('/products', [ProductController::class, 'getProducts'])->name('products.data');
+Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+Route::get('/admin/dealer/{id}/detail', [ProductController::class, 'showAdmin'])->name('admin.dealer.detail');
+Route::get('/admin/dealer/{id}/edit', [ProductController::class, 'edit'])->name('admin.dealer.edit');
+Route::put('/admin/dealer/{id}/update', [ProductController::class, 'update'])->name('admin.dealer.update');
+Route::get('/admin/dealer', [ProductController::class, 'index'])->name('admin.dealer.index');
 
 
 Route::prefix('admin')->group(function () {

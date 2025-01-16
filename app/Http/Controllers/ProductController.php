@@ -11,31 +11,58 @@ class ProductController extends Controller
 {
     public function index()
     {
+        return view('admin.dealer.dealer');
+    }
+
+    // For AJAX DataTable
+    public function getProducts()
+    {
         $products = Product::all();
         return response()->json($products);
     }
 
-    public function show($id)
-    {
-        $product = Product::with('minuses')->find($id);
+        public function show($id)
+        {
+            $product = Product::with('minuses')->find($id);
 
-        if (!$product) {
-            // Jika produk tidak ditemukan, redirect ke halaman lain dengan pesan error
-            return redirect('/home')->with('error', 'Product not found');
+            if (!$product) {
+                // Jika produk tidak ditemukan, redirect ke halaman lain dengan pesan error
+                return redirect('/home')->with('error', 'Product not found');
+            }
+
+            // Hitung total_price (harga produk dikurangi harga minus)
+            $product->total_price = $product->price - $product->minuses->sum('minus_price');
+
+            // Jika request meminta JSON (misalnya dari AJAX)
+            if (request()->wantsJson()) {
+                return response()->json($product);
+            }
+
+            // Jika request datang dari web browser, tampilkan ke view checkout
+            return view('checkout.checkout', compact('product'));
         }
 
-        // Hitung total_price (harga produk dikurangi harga minus)
-        $product->total_price = $product->price - $product->minuses->sum('minus_price');
-
-        // Jika request meminta JSON (misalnya dari AJAX)
-        if (request()->wantsJson()) {
-            return response()->json($product);
+        public function showAdmin($id)
+        {
+            $dealer = Product::with('minuses')->find($id); // Ganti $product menjadi $dealer
+        
+            if (!$dealer) {
+                // Jika dealer tidak ditemukan, redirect ke halaman lain dengan pesan error
+                return redirect('/dealer/admin')->with('error', 'Dealer not found');
+            }
+        
+            // Hitung total_price (harga dealer dikurangi harga minus)
+            $dealer->total_price = $dealer->price - $dealer->minuses->sum('minus_price');
+        
+            // Jika request meminta JSON (misalnya dari AJAX)
+            if (request()->wantsJson()) {
+                return response()->json($dealer);
+            }
+        
+            // Jika request datang dari web browser, tampilkan ke view admin.dealer.detail
+            return view('admin.dealer.detail', compact('dealer')); // Ganti $product menjadi $dealer
         }
-
-        // Jika request datang dari web browser, tampilkan ke view checkout
-        return view('checkout.checkout', compact('product'));
-    }
-
+        
 
     public function store(Request $request)
     {
@@ -107,90 +134,42 @@ class ProductController extends Controller
         ], 201);
     }
 
-
-    public function update(Request $request, $id)
+    public function edit($id)
     {
-        $request->validate([
-            'name' => 'nullable|string',
-            'description' => 'nullable|string',
-            'category_id' => 'nullable|numeric|exists:categories,id',
-            'price' => 'nullable|numeric',
-            'requested' => ['nullable', Rule::in(['non-accepted', 'accepted', 'rejected'])],
-            'status' => ['nullable', Rule::in(['active', 'inactive'])],
-            'user_id' => 'nullable|numeric',
-            'minuses' => 'array',
-            'minuses.*' => 'numeric|exists:minuses,id',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:6000',
-        ]);
-
+        // Find the product by ID
         $product = Product::find($id);
 
         if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
+            return redirect()->route('admin.dealer.index')->with('error', 'Product not found');
         }
 
-        // Update data produk
-        $product->update($request->only([
-            'name',
-            'description',
-            'price',
-            'requested',
-            'status',
-            'user_id',
-        ]));
-
-        // Update kategori jika diberikan
-        if ($request->has('category_id')) {
-            $category = \App\Models\Category::find($request->category_id);
-            if ($category) {
-                $product->category_id = $category->id;
-                $product->category = $category->name_iphone;
-            }
-        }
-
-        // Menangani upload gambar
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->extension();
-            $image->move(public_path('images-product'), $imageName);
-
-            // Hapus gambar lama jika ada
-            if ($product->image && file_exists(public_path('images-product/' . $product->image))) {
-                unlink(public_path('images-product/' . $product->image));
-            }
-
-            // Update nama dan URL gambar di database
-            $product->image = $imageName;
-            $product->image_url = url('images-product/' . $imageName);
-        }
-
-        $product->save();
-
-        // Hapus data lama di tabel minus_products
-        DB::table('minus_products')->where('product_id', $product->id)->delete();
-
-        // Tambahkan minus baru jika diberikan
-        $totalPrice = $product->price;
-        if ($request->has('minuses') && is_array($request->minuses)) {
-            $minuses = \App\Models\Minus::whereIn('id', $request->minuses)->get();
-
-            foreach ($minuses as $minus) {
-                $totalPrice -= $minus->minus_price;
-
-                DB::table('minus_products')->insert([
-                    'product_id' => $product->id,
-                    'minus_id' => $minus->id,
-                    'total_price' => $totalPrice,
-                ]);
-            }
-        }
-
-        return response()->json([
-            'message' => 'Successfully updated product with minuses and image!',
-            'product' => $product,
-            'total_price' => $totalPrice,
-        ]);
+        // Pass the product to the view
+        return view('admin.dealer.edit', compact('product'));
     }
+    
+     public function update(Request $request, $id)
+{
+    // Validation
+    $request->validate([
+        'price' => 'nullable|numeric',
+        'status' => ['nullable', Rule::in(['active', 'inactive'])],
+        'requested' => ['nullable', Rule::in(['non-accepted', 'accepted', 'rejected'])],
+    ]);
+
+    // Find the product by ID
+    $product = Product::find($id);
+
+    if (!$product) {
+        return redirect()->route('admin.dealer.index')->with('error', 'Product not found');
+    }
+
+    // Update the product
+    $product->update($request->only(['price', 'status', 'requested']));
+
+    // Redirect back to the dealer page with success message
+    return redirect()->route('admin.dealer.index')->with('success', 'Product updated successfully');
+}
+    
 
 
     public function destroy($id)
