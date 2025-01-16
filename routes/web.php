@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArtikelController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MinusController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -33,12 +35,22 @@ Route::get('/artikel-admin', function () {
     return view('admin.artikel.artikel'); 
 });
 
+Route::get('/api/categories', [CategoryController::class, 'index']);
+Route::get('/api/minuses', [MinusController::class, 'index']);
+
+
+Route::get('/sell', function () {
+    return view('sell.sell');
+})->name('sell');
+
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/api/products', [ProductController::class, 'index']);
 Route::get('/get-artikel', [ArtikelController::class, 'index']);
 Route::post('/artikel', [ArtikelController::class, 'store']);
+Route::get('/artikel/{id}', [ArtikelController::class, 'show']);
+Route::post('/api/products', [ProductController::class, 'store']);
 
 
 Route::prefix('admin')->group(function () {

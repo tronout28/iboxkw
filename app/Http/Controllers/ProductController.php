@@ -26,13 +26,9 @@ class ProductController extends Controller
 
         // Hitung total_price (harga produk dikurangi harga minus)
         $product->total_price = $product->price - $product->minuses->sum('minus_price');
-
-        // Jika request meminta JSON (misalnya dari AJAX)
         if (request()->wantsJson()) {
             return response()->json($product);
         }
-
-        // Jika request datang dari web browser, tampilkan ke view checkout
         return view('checkout.checkout', compact('product'));
     }
 

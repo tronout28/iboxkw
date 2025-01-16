@@ -152,8 +152,6 @@
     </div>
 
     <!-- Footer -->
-    @include('checkout.container')
-
     <!-- JavaScript -->
      <script>
         document.addEventListener('DOMContentLoaded', async () => {
@@ -167,7 +165,6 @@
             }
 
             try {
-                // Fetch data produk dari server
                 const response = await fetch(`/checkout/${productId}`);
                 if (!response.ok) {
                     throw new Error(`Gagal mendapatkan data produk. HTTP Status: ${response.status}`);

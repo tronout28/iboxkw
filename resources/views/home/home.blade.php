@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
     <link href="" rel="stylesheet">
 
     <title>iBox</title>
@@ -51,7 +53,7 @@
     
 </div>
 <div class="divider my-6 border-t-2 border-gray-200"></div>
-<h2 class="text-2xl font-semibold text-center" style="padding: 0 150px;">Temukan layanan dan penawaran lainnya.</h2>
+<h2 class="text-2xl font-semibold text-center" style="padding: 0 150px;">Artikel</h2>
 <div style="padding: 20px 150px;">
     @include('component.cardinfo')
 </div>

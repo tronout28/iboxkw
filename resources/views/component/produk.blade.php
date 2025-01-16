@@ -15,7 +15,7 @@
 
 .product {
     text-align: center;
-    margin: 10px;
+    margin: 2px;
 }
 
 .product h3 {
@@ -39,7 +39,6 @@
     flex: 0 0 auto;
     text-align: center;
     padding: 10px; /* Spasi dalam elemen */
-    background: #fff; /* Warna latar */
 }
 
 .product-card img {
