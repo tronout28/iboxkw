@@ -31,7 +31,7 @@ class ArtikelController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => $artikel 
+            'data' => $artikel
         ]);
     }
 
@@ -43,40 +43,40 @@ class ArtikelController extends Controller
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:png,jpg,jpeg|max:6000'
         ]);
-    
+
         $artikel = new Artikel([
             'title' => $request->title,
             'subtitle' => $request->subtitle,
             'content' => $request->content,
         ]);
-    
+
         $artikel->save();
-    
+
         // Menangani upload gambar
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->extension();
             $image->move(public_path('images-artikel'), $imageName);
-    
+
             // Menyimpan nama gambar ke database
             $artikel->image = $imageName;
             $artikel->image_url = url('images-artikel/' . $imageName);
-    
+
             $artikel->save();
         }
-    
+
         return response()->json([
             'status' => 'success',
             'data' => $artikel
         ], 201);
     }
-    
-    
+
+
     public function destroy($id)
     {
         // Cari artikel berdasarkan ID
         $artikel = Artikel::find($id);
-    
+
         // Jika artikel tidak ditemukan
         if (!$artikel) {
             return response()->json([
@@ -84,21 +84,39 @@ class ArtikelController extends Controller
                 'message' => 'Artikel tidak ditemukan'
             ], 404);
         }
-    
-        // Hapus gambar jika ada
-        if ($artikel->image && file_exists(public_path('images-artikel/' . $artikel->image))) {
-            unlink(public_path('images-artikel/' . $artikel->image));
+
+        // Hapus gambar jika ada dan file tersebut masih ada di sistem
+        if ($artikel->image) {
+            $imagePath = public_path('images-artikel/' . $artikel->image);
+            if (file_exists($imagePath)) {
+                try {
+                    unlink($imagePath);
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Gagal menghapus file gambar: ' . $e->getMessage()
+                    ], 500);
+                }
+            }
         }
-    
-        // Hapus artikel
-        $artikel->delete();
-    
-        // Kembalikan response sukses
+
+        // Hapus artikel dari database
+        try {
+            $artikel->delete();
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menghapus artikel: ' . $e->getMessage()
+            ], 500);
+        }
+
+        // Kembalikan respons sukses
         return response()->json([
             'status' => 'success',
             'message' => 'Artikel berhasil dihapus'
         ]);
     }
+
 
     public function update(Request $request, $id)
     {
