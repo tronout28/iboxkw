@@ -63,7 +63,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/api/products', [ProductController::class, 'index']);
 Route::get('/get-artikel', [ArtikelController::class, 'index']);
 Route::post('/artikel', [ArtikelController::class, 'store']);
-Route::get('api/filtered-products', [ProductController::class, 'getFilteredProducts']);
+Route::get('/filtered-products', [ProductController::class, 'getFilteredProducts']);
 
 
 Route::get('/products', [ProductController::class, 'getProducts']);

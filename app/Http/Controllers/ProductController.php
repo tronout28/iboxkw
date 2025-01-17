@@ -224,7 +224,8 @@ class ProductController extends Controller
 
         // Jika kategori ada, filter berdasarkan kategori
         if ($category) {
-            $products = Product::where('category', $category)->get();
+            $products = Product::where('category', $category)->where('requested', 'accepted')
+            ->where('status', 'active')->get();
         } else {
             // Jika tidak ada kategori, tampilkan semua produk
             $products = Product::all();
