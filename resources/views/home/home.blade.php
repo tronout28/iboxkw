@@ -13,6 +13,14 @@
             box-sizing: border-box;
         }
 
+        .catalogue {
+            text-align: center;
+            display: block; 
+            margin-top: 1rem;
+            text-decoration: none;
+        }
+
+        
         body {
             font-family: 'Manrope', Arial, sans-serif;
             background-color: #f9fafb;
@@ -109,7 +117,8 @@
 
     <div class="divider"></div>
 
-    <h1 class="h1">Cek produk terbaru</h1>
+        <h1 class="h1">Cek produk terbaru </h1>
+        <a class="catalogue" href="/catalogue">Cek Produk lain</a>
     @include('component.produk')
 
     <div class="divider"></div>
