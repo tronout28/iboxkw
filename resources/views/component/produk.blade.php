@@ -108,7 +108,7 @@
                     productsSlider.appendChild(productCard);
                 });
 
-                // Aktifkan auto-scroll
+                // Aktifkan auto-scroll yg keren
                 autoScroll(productsSlider, products.length);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -137,3 +137,5 @@
     </script>
 </body>
 </html>
+
+
