@@ -28,6 +28,8 @@ Route::get('/login', function () {
     return view('login.login'); 
 });
 
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 Route::get('/home', function () {
     return view('home.home'); 
 });
