@@ -11,7 +11,8 @@
         header {
             background-color: white;
             border-bottom: 1px solid #e5e7eb;
-            padding: 12px 0; /* Padding lebih besar untuk memberi ruang */
+            padding: 12px 0;
+            /* Padding lebih besar untuk memberi ruang */
         }
 
         .container {
@@ -29,7 +30,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 60px; /* Menambah tinggi untuk keseimbangan */
+            height: 60px;
+            /* Menambah tinggi untuk keseimbangan */
             padding: 0 20px;
         }
 
@@ -41,7 +43,8 @@
         }
 
         .logo img {
-            height: 35px; /* Ukuran logo yang sedikit lebih besar */
+            height: 75px;
+            /* Ukuran logo yang sedikit lebih besar */
         }
 
         .logo .partner-badge {
@@ -90,13 +93,15 @@
 
         .icon-links a {
             color: #374151;
-            font-size: 22px; /* Ukuran ikon sedikit lebih besar */
+            font-size: 22px;
+            /* Ukuran ikon sedikit lebih besar */
             transition: color 0.3s ease, transform 0.3s ease;
         }
 
         .icon-links a:hover {
             color: #2563eb;
-            transform: scale(1.1); /* Efek hover zoom */
+            transform: scale(1.1);
+            /* Efek hover zoom */
         }
 
         /* Navigation Menu */
@@ -158,13 +163,14 @@
         <div class="top-section">
             <!-- Logo -->
             <div class="logo">
-                <img src="https://www.bing.com/ck/a?!&&p=724a1f6a1754d15d61d31286d31cf9df5c00877a44c24a96eb0d4e4f8fff2cfdJmltdHM9MTczNjk4NTYwMA&ptn=3&ver=2&hsh=4&fclid=003d10f2-e6e9-630e-0bb9-05c8e7bf62bb&u=a1L2ltYWdlcy9zZWFyY2g_cT1sb2dvJTIwYXBwbGUmRk9STT1JUUZSQkEmaWQ9NTc4OEFGRjdGM0UyMUREQ0RDRTdCQzREMTY2NTY4QTdCRUM2RTZERA&ntb=1" alt="Logo">
+                <img src="http://127.0.0.1:8000/image/beliseken.jpg" alt="Logo">
             </div>
             <!-- Navigation Menu -->
             <nav>
-                <a href="https://ibox.co.id/iphone">home</a>
-                <a href="https://ibox.co.id/iphone">Iphone</a>
-                <a href="https://ibox.co.id/watch">Watch</a>
+                <a href="home">home</a>
+                <a href="/catalogue">Iphone</a>
+                <a href="/catalogue">Watch</a>
+                <a href="sell">Jual</a>
             </nav>
         </div>
 

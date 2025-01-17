@@ -23,6 +23,13 @@ Route::get('/home', function () {
     return view('home.home'); 
 });
 
+route::get('/catalogue', function () {
+    return view('filtered.filtered');
+});
+
+Route::get('/products-by-category', [ProductController::class, 'showProductsByCategory']);
+
+
 Route::post('/loginAdmin', [AuthController::class, 'loginAdmin']);
 
 

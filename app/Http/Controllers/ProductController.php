@@ -31,7 +31,6 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
-
     public function show($id)
     {
         $product = Product::with('minuses')->find($id);
@@ -216,6 +215,21 @@ class ProductController extends Controller
     public function showProductByCategory($category)
     {
         $products = Product::where('category', $category)->get();
+        return response()->json($products);
+    }
+
+    public function showProductsByCategory(Request $request)
+    {
+        $category = $request->input('category');
+
+        // Jika kategori ada, filter berdasarkan kategori
+        if ($category) {
+            $products = Product::where('category', $category)->get();
+        } else {
+            // Jika tidak ada kategori, tampilkan semua produk
+            $products = Product::all();
+        }
+
         return response()->json($products);
     }
 }

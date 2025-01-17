@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +33,8 @@
         }
 
         .product-card {
-            min-width: 25%; /* Maksimal 4 produk dalam satu layar */
+            min-width: 25%;
+            /* Maksimal 4 produk dalam satu layar */
             box-sizing: border-box;
             padding: 15px;
         }
@@ -54,14 +56,25 @@
             object-fit: contain;
         }
 
+        .partner-badge {
+            align-items: center;
+            border: 1px solid #d1d5db;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: red;
+        }
+
         .product-info {
             padding: 15px;
-            text-align: left; /* Menambahkan text-align kiri */
+            text-align: left;
+            /* Menambahkan text-align kiri */
         }
 
         .product-info h2,
         .product-info p {
-            margin: 0 0 10px; /* Menambahkan margin bawah agar lebih teratur */
+            margin: 0 0 10px;
+            /* Menambahkan margin bawah agar lebih teratur */
         }
 
         .product-name {
@@ -89,10 +102,12 @@
             color: #333;
             margin-top: 10px;
             font-weight: bold;
-            text-align: left; /* Menambahkan text-align kiri untuk harga */
+            text-align: left;
+            /* Menambahkan text-align kiri untuk harga */
         }
     </style>
 </head>
+
 <body>
     <div class="products-container">
         <div class="products-slider" id="products-slider">
@@ -115,10 +130,12 @@
                         <div class="product-card-inner">
                             <img src="${product.image}" alt="${product.name}">
                             <div class="product-info">
-                                <h2>${product.name}</h2>
-                                <p>Description : ${product.description}</p>
-                                <p>Category : ${product.category}</p>
-                                <p class="product-price">Rp ${product.price.toFixed(2)}</p>
+                                <h2 style="text-align: center;">${product.name}</h2>
+                                <span class="partner-badge">Star</span>
+                                <p>${product.category}</p>
+                                <p class="product-description">${product.description}</p>
+                                <br>
+                                <p class="product-price" style="text-align: right;">${formatRupiah(product.price)}</p>
                             </div>
                         </div>
                     `;
@@ -133,6 +150,15 @@
             } catch (error) {
                 console.error('Error fetching products:', error);
             }
+        }
+
+        // Fungsi untuk memformat angka ke format Rupiah
+        function formatRupiah(number) {
+            return number.toLocaleString('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).replace('IDR', ''); // Hapus IDR, biar cuma ada Rp
         }
 
         function autoScroll(slider, totalProducts) {
@@ -156,4 +182,5 @@
         window.onload = fetchProducts;
     </script>
 </body>
+
 </html>
