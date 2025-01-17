@@ -1,163 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/checkout/checkout.css" rel="stylesheet">
+
     <title>Checkout Produk</title>
+
     <style>
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .product-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 100px;
-        }
-
-        /* Product Image */
-        .product-image {
-            flex: 0 0 50%;
-            max-width: 50%;
-        }
-
-        .product-image img {
-            width: 100%;
+        .transparent-card {
+            background-color: rgba(169, 169, 169, 0.2); /* Transparansi abu-abu */
+            padding: 15px;
             border-radius: 8px;
-            object-fit: cover;
-        }
-
-        /* Product Details */
-        .product-details {
-            flex: 1;
-        }
-
-        .product-details h1 {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .product-details .sku {
-            color: #6b7280;
-            font-size: 0.9rem;
             margin-bottom: 20px;
         }
-
-        /* Price Section */
-        .price-section {
-            margin-bottom: 20px;
+        .transparent-card p, .transparent-card label {
+            margin: 0;
+            font-size: 16px;
+        }
+        .transparent-card p {
+            color: #333;
+        }
+        .transparent-card label {
+            font-weight: 500;
         }
 
-        .price-section .original-price {
-            text-decoration: line-through;
-            color: #6b7280;
-        }
-
-        .price-section .discounted-price {
-            color: #dc2626;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .price-section .installment span {
-            color: #2563eb;
-        }
-
-        .price-section a {
-            color: #2563eb;
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50; /* Warna hijau */
+            color: white;
+            border-radius: 5px;
             text-decoration: none;
+            margin-top: 20px;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.3s ease;
         }
 
-        /* Select Dropdown */
-        select {
-            width: 100%;
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid #E5E7EB;
-            margin-top: 5px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .product-row {
-                flex-direction: column;
-                gap: 30px;
-            }
-
-            .product-image {
-                flex: 0 0 100%;
-                max-width: 100%;
-            }
+        .back-button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 
 <body>
-    <!-- Header -->
-    @include('home.header')
-
     <div class="container">
         <div class="product-row">
-            <!-- Product Image -->
             <div class="product-image">
                 <img id="productImage" src="{{ $product->image ?? '/images/default-product.jpg' }}" alt="{{ $product->name ?? 'Produk Tidak Tersedia' }}">
             </div>
 
-            <!-- Product Details -->
             <div class="product-details">
                 <h1 id="productName">{{ $product->name ?? 'Produk Tidak Tersedia' }}</h1>
-                <p class="sku" id="productSku">SKU: {{ $product->id ?? '-' }}</p>
+                <p class="sku" id="productSku">
+                    <i class="fas fa-tag"></i>
+                    SKU: {{ $product->id ?? '-' }}
+                </p>
 
-                <!-- Price Section -->
                 <div class="price-section" id="priceSection">
                     @if (!empty($product->total_price))
                         <p class="original-price">
                             {{ $product->price > $product->total_price ? 'Rp' . number_format($product->price, 0, ',', '.') : '' }}
                         </p>
-                        <p class="discounted-price">Rp{{ number_format($product->total_price, 0, ',', '.') }}</p>
-                        <p class="installment">atau <span>Rp{{ number_format($product->total_price / 24, 0, ',', '.') }}/bln*</span></p>
-                        <a href="#">Simulasi cicilan dan Paylater</a>
+                        <p class="discounted-price">
+                            Rp{{ number_format($product->total_price, 0, ',', '.') }}
+                            @if($product->price > $product->total_price)
+                                <span class="discount-badge">
+                                    {{ round((($product->price - $product->total_price) / $product->price) * 100) }}% OFF
+                                </span>
+                            @endif
+                        </p>
                     @else
                         <p class="discounted-price">Rp{{ number_format($product->price, 0, ',', '.') }}</p>
                     @endif
                 </div>
 
-                <!-- Model Dropdown -->
-                <div class="product-model">
-                    <label for="modelSelect">Model</label>
-                    <select id="modelSelect">
-                        <option>{{ $product->category ?? 'Model Tidak Tersedia' }}</option>
-                    </select>
+                <!-- Menambahkan Deskripsi Produk dengan transparansi abu-abu -->
+                <div class="transparent-card description">
+                    <i class="fas fa-mobile-alt"></i> Description
+
+                    <p>{{ $product->description ?? 'Deskripsi produk tidak tersedia.' }}</p>
                 </div>
 
-                <!-- Minus Details -->
-                <h3>Daftar Minus</h3>
+                <!-- Mengubah Model menjadi Statik dengan transparansi abu-abu -->
+                <div class="transparent-card product-model">
+                    <i class="fas fa-mobile-alt"></i> Model
+
+                    <p id="modelSelect">{{ $product->category ?? 'Model Tidak Tersedia' }}</p>
+                </div>
+
                 @if ($product->minuses->isNotEmpty())
-                    <ul>
-                        @foreach ($product->minuses as $minus)
-                            <li>{{ $minus->minus_product }} - Rp{{ number_format($minus->minus_price, 0, ',', '.') }}</li>
-                        @endforeach
-                    </ul>
-                @else
-                    <p>Tidak ada minus terkait dengan produk ini.</p>
+                    <div class="minus-section">
+                        <h3>
+                            <i class="fas fa-exclamation-circle"></i>
+                            Daftar Minus
+                        </h3>
+                        <ul>
+                            @foreach ($product->minuses as $minus)
+                                <li>
+                                    <span>{{ $minus->minus_product }}</span>
+                                    <span class="minus-price">- Rp{{ number_format($minus->minus_price, 0, ',', '.') }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
+
+                <div class="action-buttons">
+                    <a href="https://wa.me/your-number-here" class="contact-admin">
+                        <i class="fab fa-whatsapp"></i>
+                        Hubungi Admin
+                    </a>
+                </div>
+
+                <!-- Tombol Kembali -->
+                <a href="javascript:history.back()" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <!-- JavaScript -->
-     <script>
+    <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // Ambil ID produk dari Blade
             const productId = "{{ $productId ?? 'null' }}";
-
-            // Validasi productId
+            
             if (!productId || productId === 'null') {
                 console.error('Product ID tidak ditemukan.');
                 return;
@@ -165,42 +135,38 @@
 
             try {
                 const response = await fetch(`/checkout/${productId}`);
-                if (!response.ok) {
-                    throw new Error(`Gagal mendapatkan data produk. HTTP Status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP Status: ${response.status}`);
 
                 const product = await response.json();
+                if (!product || !product.id) throw new Error('Data produk tidak valid.');
 
-                // Validasi data produk
-                if (!product || !product.id) {
-                    throw new Error('Data produk tidak valid.');
-                }
-
-                // Update UI dengan data produk
                 document.getElementById('productImage').src = product.image || '/images/default-product.jpg';
                 document.getElementById('productName').textContent = product.name || 'Produk Tidak Tersedia';
                 document.getElementById('productSku').textContent = `SKU: ${product.id}`;
 
-                // Update harga
                 const priceSection = document.getElementById('priceSection');
-                priceSection.innerHTML = `
-                    <p class="original-price">${product.price > product.total_price ? formatPrice(product.price) : ''}</p>
-                    <p class="discounted-price">${formatPrice(product.total_price)}</p>
-                    <p class="installment">atau <span>${formatPrice(product.total_price / 24)}/bln*</span></p>
-                    <a href="#">Simulasi cicilan dan Paylater</a>
-                `;
+                if (product.price > product.total_price) {
+                    const discountPercent = Math.round(((product.price - product.total_price) / product.price) * 100);
+                    priceSection.innerHTML = ` 
+                        <p class="original-price">${formatPrice(product.price)}</p>
+                        <p class="discounted-price">
+                            ${formatPrice(product.total_price)}
+                            <span class="discount-badge">${discountPercent}% OFF</span>
+                        </p>
+                    `;
+                } else {
+                    priceSection.innerHTML = `
+                        <p class="discounted-price">${formatPrice(product.total_price)}</p>
+                    `;
+                }
 
-                // Update dropdown model
-                const modelSelect = document.getElementById('modelSelect');
-                modelSelect.innerHTML = `<option>${product.category || 'Model Tidak Tersedia'}</option>`;
+                // Mengubah Model menjadi statik
+                document.getElementById('modelSelect').textContent = product.category || 'Model Tidak Tersedia';
             } catch (error) {
                 console.error('Error:', error.message);
-
-                // Tampilkan error di UI
                 document.getElementById('productName').textContent = 'Terjadi kesalahan saat memuat data produk.';
             }
 
-            // Helper function untuk format harga
             function formatPrice(price) {
                 return new Intl.NumberFormat('id-ID', {
                     style: 'currency',
@@ -210,5 +176,4 @@
         });
     </script>
 </body>
-
 </html>

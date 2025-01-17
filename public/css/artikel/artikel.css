@@ -1,0 +1,100 @@
+body {
+    font-family: 'Quicksand', sans-serif;
+    background-color: #f8f8f8; /* Soft background for a clean look */
+}
+
+header {
+    background-color: #002e5d;
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Gambar artikel dibuat lebih besar dan responsif */
+.article-image img {
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Header artikel lebih besar dan lebih mencolok */
+.article-header h1 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: #333;
+    font-size: 3rem;  /* Ukuran font lebih besar */
+    margin-bottom: 10px;
+}
+
+/* Menata bagian artikel tanggal dan judul lebih jelas */
+.article-header p {
+    font-size: 1rem;
+    color: #aaa;
+    text-align: center;
+}
+
+/* Subtitle artikel lebih jelas dan lebih besar */
+.article-subtitle h3 {
+    font-size: 1.75rem;  /* Menambahkan ukuran font untuk subtitle */
+    color: #333;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+/* Konten artikel lebih lebar dan responsif */
+.article-content p {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: #555;
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
+/* Divider untuk memberi jarak yang lebih baik antara bagian artikel */
+.my-4.border-top {
+    border-top: 2px solid #ccc;
+    margin-top: 40px;
+}
+
+/* Penataan tombol share lebih menarik */
+.text-center .btn-primary {
+    background-color: #001a45;
+    border-radius: 50px;
+    padding: 12px 35px;
+    font-size: 1rem;
+}
+
+.text-center .btn-primary:hover {
+    background-color: #002e5d;
+    opacity: 0.8;
+}
+
+/* Menambah padding untuk kontainer utama */
+.container {
+    padding-top: 50px;
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 767px) {
+    .article-header h1 {
+        font-size: 2rem;
+    }
+
+    .article-header p {
+        font-size: 0.9rem;
+    }
+
+    .article-subtitle {
+        font-size: 1.5rem;
+    }
+
+    .article-content p {
+        font-size: 1rem;
+    }
+
+    .text-center .btn-primary {
+        padding: 10px 25px;
+    }
+}
