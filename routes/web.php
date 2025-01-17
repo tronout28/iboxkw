@@ -10,13 +10,22 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
 Route::get('/', function () {
-    return view('login.login'); 
+    return view('home.home'); 
 });
 
 Route::get('/checkout/{id}', [ProductController::class, 'show']);
 
+Route::get('/profile', function () {
+    return view('profile.profile'); 
+})->middleware('auth')->name('profile');
+
+
 Route::get('/register', function () {
     return view('register.register'); 
+});
+
+Route::get('/login', function () {
+    return view('login.login'); 
 });
 
 Route::get('/home', function () {
@@ -46,7 +55,8 @@ Route::get('/api/minuses/category/{category_id}', [MinusController::class, 'show
 
 Route::get('/sell', function () {
     return view('sell.sell');
-})->name('sell');   
+})->middleware('auth')->name('sell');
+
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -71,7 +81,7 @@ Route::prefix('admin')->group(function () {
     Route::view('/dashboard-admin', 'admin.dashboard.dashboard')->name('admin.dashboard.dashboard');
     Route::view('/dealer-admin', 'admin.dealer.dealer')->name('admin.dealer.dealer');
     Route::view('/artikel-admin', 'admin.artikel.artikel')->name('admin.artikel.artikel');
-});
+})->middleware('role:admin');
 
 Route::get('/images-product/{filename}', function ($filename) {
     $path = public_path('images-product/'.$filename);
