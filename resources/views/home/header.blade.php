@@ -84,7 +84,7 @@
             height: 16px;
         }
 
-        /* Icon Links */
+        /* Updated Icon Links */
         .icon-links {
             display: flex;
             gap: 20px;
@@ -93,15 +93,38 @@
 
         .icon-links a {
             color: #374151;
-            font-size: 22px;
-            /* Ukuran ikon sedikit lebih besar */
-            transition: color 0.3s ease, transform 0.3s ease;
+            font-size: 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .icon-links a i {
+            font-size: 18px;
         }
 
         .icon-links a:hover {
-            color: #2563eb;
-            transform: scale(1.1);
-            /* Efek hover zoom */
+            color: #ffd700;
+            transform: scale(1.05);
+        }
+
+        /* Active state for navigation */
+        nav a.active,
+        .icon-links a.active {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        nav a.active {
+            border-bottom: 2px solid #ffd700;
+        }
+
+        .icon-links a.active {
+            background-color: #fff9e6;
         }
 
         /* Navigation Menu */
@@ -167,23 +190,32 @@
             </div>
             <!-- Navigation Menu -->
             <nav>
-                <a href="home">home</a>
-                <a href="/catalogue">Iphone</a>
-                <a href="/catalogue">Watch</a>
-                <a href="sell">Jual</a>
+                <a href="home" class="{{ Request::is('home') ? 'active' : '' }}">home</a>
+                <a href="/catalogue" class="{{ Request::is('catalogue') ? 'active' : '' }}">Iphone</a>
+                <a href="/catalogue" class="{{ Request::is('catalogue') ? 'active' : '' }}">Watch</a>
+                <a href="sell" class="{{ Request::is('sell') ? 'active' : '' }}">Jual</a>
             </nav>
-            
-             <!-- Authentication Links -->
-             <div class="icon-links">
+
+            <!-- Authentication Links -->
+            <div class="icon-links">
                 @guest
-                    <!-- Guest (not logged in) -->
-                    <a href="{{ route('login') }}">Login</a>
-                    <a href="{{ route('register') }}">Register</a>
+                <!-- Guest (not logged in) -->
+                <a href="{{ route('login') }}" class="{{ Request::routeIs('login') ? 'active' : '' }}">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </a>
+                <a href="{{ route('register') }}" class="{{ Request::routeIs('register') ? 'active' : '' }}">
+                    <i class="fas fa-user-plus"></i>
+                    Register
+                </a>
                 @endguest
 
                 @auth
-                    <!-- Authenticated (logged in) -->
-                    <a href="{{ route('profile') }}">Profile</a>
+                <!-- Authenticated (logged in) -->
+                <a href="{{ route('profile') }}" class="{{ Request::routeIs('profile') ? 'active' : '' }}">
+                    <i class="fas fa-user-circle"></i>
+                    Profile
+                </a>
                 @endauth
             </div>
         </div>
