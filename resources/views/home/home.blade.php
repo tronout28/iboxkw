@@ -121,7 +121,7 @@
             </div>
             <h3>Temukan iPhone terbaru dengan berbagai fitur canggih.</h3>
             <br>
-            <p class="text"> Mulai dari kamera profesional hingga performa luar biasa.</p>
+            <p class="text"> Mulai dari kamera profesional hingga performa luar biasa. <br><br><br><a href="#">Lebih lanjut</a></p>
         </div>
         <div class="section-item">
             <div class="icon">
@@ -129,7 +129,7 @@
             </div>
             <h3>Dapatkan servis dan bantuan profesional.</h3>
             <br>
-            <p class="text"> Mulai dari pengaturan device terbaru-mu hingga servis, dapatkan pengalaman terbaiknya. <a href="#">Lebih lanjut</a></p>
+            <p class="text"> Mulai dari pengaturan device terbaru-mu hingga servis, dapatkan pengalaman terbaiknya. <br><br><a href="#">Lebih lanjut</a></p>
         </div>
       
         <div class="section-item">
@@ -138,7 +138,7 @@
             </div>
             <h3>Beli online, ambil di toko.</h3>
             <br>
-            <p class="text">Hubungi admin lalu datang ke toko</p>
+            <p class="text">Hubungi admin lalu datang ke toko <br><br><br><br><br><a href="#">Lebih lanjut</a></p>
         </div>
     </div>
     

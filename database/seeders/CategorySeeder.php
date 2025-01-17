@@ -32,7 +32,8 @@ class CategorySeeder extends Seeder
             ['name_iphone' => 'Iphone 14 Pro Max','created_at' => now(), 'updated_at' => now()],
             ['name_iphone' => 'Iphone 15','created_at' => now(), 'updated_at' => now()],
             ['name_iphone' => 'Iphone 15 Pro','created_at' => now(), 'updated_at' => now()],
-            ['name_iphone' => 'Iphone 15 Pro Max','created_at' => now(), 'updated_at' => now()]
+            ['name_iphone' => 'Iphone 15 Pro Max','created_at' => now(), 'updated_at' => now()],
+            ['name_iphone' => 'Watch', 'created_at' => now(), 'updated_at' => now()]
         ]);
     }
 }

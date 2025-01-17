@@ -35,7 +35,7 @@ class MinusSeeder extends Seeder
         // Category groupings with their specific prices
         $categoryPrices = [
             [
-                'categories' => ['Iphone X', 'Iphone 11', 'Iphone 12'],
+                'categories' => ['Iphone X', 'Iphone 11', 'Iphone 12','Iphone XR'],
                 'prices' => [
                     'Face ID' => 500000,
                     'layar' => 450000,
