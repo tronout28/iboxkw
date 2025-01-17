@@ -7,7 +7,6 @@
     <title>Add New Product</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <style>
         :root {
             --primary-color: #2563eb;
@@ -17,208 +16,230 @@
             --text-color: #374151;
             --border-color: #d1d5db;
             --focus-color: rgba(37, 99, 235, 0.2);
+            --button-text-color: #ffffff;
+            --placeholder-color: #9ca3af;
         }
-
+    
         body {
             background-color: var(--bg-color);
             font-family: 'Inter', sans-serif;
             color: var(--text-color);
             margin: 0;
-            padding: 1rem;
+            padding: 2rem; /* Lebih banyak padding di body */
             line-height: 1.6;
         }
-
+    
         .container {
-            max-width: 600px;
+            max-width: 100%; /* Full width container */
             margin: 0 auto;
             background: var(--card-bg);
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column; /* Untuk membuat formulir penuh dari atas ke bawah */
         }
-
+    
         .form-header {
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
-
+    
         .form-header h1 {
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
         }
-
+    
         .form-header p {
             color: #6b7280;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
-
+    
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.75rem;
         }
-
+    
         .form-label {
             display: block;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 1.1rem;
+            font-weight: 600;
             margin-bottom: 0.5rem;
         }
-
+    
         .form-control,
-        .form-select {
+        .form-select,
+        .textarea {
             width: 100%;
-            padding: 0.75rem;
+            padding: 1rem;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.2s ease-in-out;
+            font-size: 1.1rem;
             background: var(--card-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease-in-out;
         }
-
+    
         .form-control:focus,
-        .form-select:focus {
+        .form-select:focus,
+        .textarea:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px var(--focus-color);
+            box-shadow: 0 0 10px var(--focus-color);
             outline: none;
         }
-
+    
+        .form-control::placeholder,
+        .form-select::placeholder,
+        .textarea::placeholder {
+            color: var(--placeholder-color);
+        }
+    
         .file-upload {
             position: relative;
-            text-align: center;
-            padding: 1.5rem;
+            padding: 1.75rem;
             border: 2px dashed var(--border-color);
             border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            text-align: center;
+            transition: background-color 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
+    
         .file-upload:hover {
             background-color: var(--focus-color);
         }
-
+    
         .file-upload i {
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: var(--primary-color);
         }
-
+    
         .file-upload span {
-            display: block;
-            font-size: 0.875rem;
-            color: #6b7280;
             margin-top: 0.5rem;
+            font-size: 1rem;
+            color: #6b7280;
         }
-
+    
         .file-upload input[type="file"] {
             display: none;
         }
-
+    
         .btn-primary {
-            width: 100%;
-            padding: 0.75rem;
-            font-size: 1rem;
-            font-weight: 500;
-            color: white;
-            background-color: var(--primary-color);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--button-text-color);
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    margin: 1.5rem auto; /* Memusatkan tombol secara horizontal */
+    display: block; /* Mengubah tombol menjadi block level element */
+    width: 100%; /* Mengatur lebar tombol agar memenuhi kontainer */
+}
 
         .btn-primary:hover {
             background-color: var(--primary-hover);
         }
-
+    
         .minuses-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            gap: 1.5rem;
         }
-
+    
         .minus-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
+            padding: 1rem;
             background: var(--bg-color);
             border-radius: 8px;
             border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
-
-        @media (max-width: 640px) {
+    
+        @media (max-width: 768px) {
             .container {
-                padding: 1rem;
+                padding: 1.5rem;
             }
-
+    
             .form-header h1 {
-                font-size: 1.5rem;
+                font-size: 2rem;
+            }
+    
+            .form-group {
+                margin-bottom: 1rem;
+            }
+    
+            .btn-primary {
+                font-size: 1rem;
             }
         }
     </style>
-</head>
-
-<body>
-    @include('home.header')
-
-    <br>
-    <br>
-    <br>
-    <br>
-
-    <div class="container">
-        <div class="form-header">
-            <h1>Jual Hpmu</h1>
-            <p>Isi form ini yang sesuai</p>
+    
+    <body>
+        @include('home.header')
+    
+        <div class="container">
+            <div class="form-header">
+                <h1>Jual Hpmu</h1>
+                <p>Isi form ini yang sesuai untuk menjual produkmu</p>
+            </div>
+    
+            <form id="productForm" enctype="multipart/form-data">
+                @csrf
+                <div class="form-group">
+                    <label class="form-label" for="name">Product Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required placeholder="Enter product name">
+                </div>
+    
+                <div class="form-group">
+                    <label class="form-label" for="category_id">Category</label>
+                    <select class="form-select" id="category_id" name="category_id" required>
+                        <option value="">Select a category</option>
+                        <!-- Dynamic category options here -->
+                    </select>
+                </div>
+    
+                <div class="form-group">
+                    <label class="form-label" for="price">Price</label>
+                    <input type="number" class="form-control" id="price" name="price" required placeholder="Enter price">
+                </div>
+    
+                <div class="form-group">
+                    <label class="form-label">Select Minus Items</label>
+                    <div id="minusSelection" class="minus-selection"></div>
+                </div>
+    
+                <div class="form-group">
+                    <label class="form-label">Product Image</label>
+                    <div class="file-upload">
+                        <label class="file-upload-label" for="image">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Click to upload or drag and drop</span>
+                            <span style="color: #6b7280; font-size: 0.875rem;">JPG, PNG or JPEG (MAX. 2MB)</span>
+                        </label>
+                        <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/jpg">
+                    </div>
+                </div>
+    
+                <div class="form-group">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control textarea" id="description" name="description" rows="4" required placeholder="Enter product description"></textarea>
+                </div>
+    
+                <button type="submit" class="btn-primary">
+                    Jual Hpmu
+                </button>
+            </form>
         </div>
-
-        <form id="productForm" enctype="multipart/form-data">
-            @csrf
-            <div class="form-group">
-                <label class="form-label" for="name">Product Name</label>
-                <input type="text" class="form-control" id="name" name="name" required placeholder="Enter product name">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="category_id">Category</label>
-                <select class="form-select" id="category_id" name="category_id" required>
-                    <option value="">Select a category</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="price">Price</label>
-                <input type="number" class="form-control" id="price" name="price" required placeholder="Enter price">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Select Minus Items</label>
-                <div id="minusSelection" class="minus-selection">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Product Image</label>
-                <div class="file-upload">
-                    <label class="file-upload-label" for="image">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <span>Click to upload or drag and drop</span>
-                        <span style="color: #6b7280; font-size: 0.875rem;">JPG, PNG or JPEG (MAX. 2MB)</span>
-                    </label>
-                    <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/jpg">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="description">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="4" required placeholder="Enter product description" style="height: 150px;"></textarea>
-            </div>
-
-            <button type="submit" class="btn-primary">
-                Jual Iphone dengan harga Rp 0
-            </button>
-        </form>
-    </div>
-
+    
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const priceInput = document.getElementById('price');
