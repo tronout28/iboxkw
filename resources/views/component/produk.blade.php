@@ -40,7 +40,6 @@
             white-space: nowrap;
         }
 
-
         /* Styling for the new product card */
         .product-card {
             display: flex;
@@ -65,8 +64,6 @@
             object-fit: contain; /* Menjaga gambar tetap utuh di dalam kontainer */
         }
 
-
-
         .product-info {
             padding: 20px;
         }
@@ -81,10 +78,9 @@
             font-size: 1rem;
             color: #666;
             margin-bottom: 10px;
-            word-wrap: break-word; 
+            word-wrap: break-word;
             white-space: normal;
         }
-
 
         .product-category {
             font-size: 0.9rem;
@@ -97,6 +93,7 @@
             font-weight: 600;
             color: #f56a00;
         }
+
     </style>
 </head>
 <body>
@@ -136,15 +133,15 @@
         // Loop through and display products
         foreach ($products as $product) {
         ?>
-        <div class="product-card">
-            <img src="<?= $product['image']; ?>" alt="<?= $product['name']; ?>" class="product-image">
-            <div class="product-info">
-                <h2 class="product-name"><?= $product['name']; ?></h2>
-                <p class="product-description"><?= $product['description']; ?></p>
-                <p class="product-category">Category: <?= $product['category']; ?></p>
-                <p class="product-price">$<?= number_format($product['price'], 2); ?></p>
+            <div class="product-card">
+                <img src="<?= $product['image']; ?>" alt="<?= $product['name']; ?>" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-name"><?= $product['name']; ?></h2>
+                    <p class="product-description"><?= $product['description']; ?></p>
+                    <p class="product-category">Category: <?= $product['category']; ?></p>
+                    <p class="product-price">$<?= number_format($product['price'], 2); ?></p>
+                </div>
             </div>
-        </div>
         <?php } ?>
     </div>
 </body>

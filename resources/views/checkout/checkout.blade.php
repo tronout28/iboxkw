@@ -83,6 +83,24 @@
             margin-top: 5px;
         }
 
+        /* WhatsApp Button */
+        .whatsapp-button {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #20b958;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .product-row {
@@ -121,8 +139,8 @@
                             {{ $product->price > $product->total_price ? 'Rp' . number_format($product->price, 0, ',', '.') : '' }}
                         </p>
                         <p class="discounted-price">Rp{{ number_format($product->total_price, 0, ',', '.') }}</p>
-                        <p class="installment">atau <span>Rp{{ number_format($product->total_price / 24, 0, ',', '.') }}/bln*</span></p>
-                        <a href="#">Simulasi cicilan dan Paylater</a>
+                      
+                        
                     @else
                         <p class="discounted-price">Rp{{ number_format($product->price, 0, ',', '.') }}</p>
                     @endif
@@ -147,13 +165,18 @@
                 @else
                     <p>Tidak ada minus terkait dengan produk ini.</p>
                 @endif
+
+                <!-- WhatsApp Button -->
+                <a class="whatsapp-button" href="https://wa.me/?text={{ urlencode('Saya tertarik dengan produk: ' . ($product->name ?? 'Produk Tidak Tersedia') . ' - Harga: Rp' . number_format($product->total_price ?? $product->price, 0, ',', '.')) }}" target="_blank">
+                    Hubungi via WhatsApp
+                </a>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
     <!-- JavaScript -->
-     <script>
+    <script>
         document.addEventListener('DOMContentLoaded', async () => {
             // Ambil ID produk dari Blade
             const productId = "{{ $productId ?? 'null' }}";
@@ -187,7 +210,7 @@
                 priceSection.innerHTML = `
                     <p class="original-price">${product.price > product.total_price ? formatPrice(product.price) : ''}</p>
                     <p class="discounted-price">${formatPrice(product.total_price)}</p>
-                    <p class="installment">atau <span>${formatPrice(product.total_price / 24)}/bln*</span></p>
+                 
                     <a href="#">Simulasi cicilan dan Paylater</a>
                 `;
 
