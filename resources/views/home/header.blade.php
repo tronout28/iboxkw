@@ -1,15 +1,17 @@
 <header class="bg-white shadow-md">
     <style>
-        /* Tambahkan font-family global */
+        /* Global Font Family */
         body {
             font-family: 'Manrope', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         /* Header Container */
         header {
             background-color: white;
             border-bottom: 1px solid #e5e7eb;
-            padding: 10px 0;
+            padding: 12px 0; /* Padding lebih besar untuk memberi ruang */
         }
 
         .container {
@@ -27,18 +29,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            height: 60px; /* Menambah tinggi untuk keseimbangan */
+            padding: 0 20px;
         }
 
         /* Logo */
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .logo img {
-            height: 30px;
+            height: 35px; /* Ukuran logo yang sedikit lebih besar */
         }
 
         .logo .partner-badge {
@@ -81,18 +84,19 @@
         /* Icon Links */
         .icon-links {
             display: flex;
-            gap: 16px;
+            gap: 20px;
             align-items: center;
         }
 
         .icon-links a {
             color: #374151;
-            font-size: 20px;
-            transition: color 0.2s;
+            font-size: 22px; /* Ukuran ikon sedikit lebih besar */
+            transition: color 0.3s ease, transform 0.3s ease;
         }
 
         .icon-links a:hover {
             color: #2563eb;
+            transform: scale(1.1); /* Efek hover zoom */
         }
 
         /* Navigation Menu */
@@ -100,20 +104,52 @@
             width: 100%;
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 24px;
             padding-top: 10px;
         }
 
         nav a {
             text-decoration: none;
             color: #374151;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 500;
-            transition: color 0.2s;
+            transition: color 0.3s ease;
         }
 
         nav a:hover {
             color: #2563eb;
+        }
+
+        /* Divider */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #e5e7eb;
+            margin-top: 10px;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .top-section {
+                flex-direction: column;
+                align-items: flex-start;
+                height: auto;
+                padding: 10px 0;
+            }
+
+            .logo {
+                margin-bottom: 10px;
+            }
+
+            nav {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .icon-links {
+                margin-top: 10px;
+            }
         }
     </style>
 
@@ -122,26 +158,16 @@
         <div class="top-section">
             <!-- Logo -->
             <div class="logo">
-                <!-- Replace the URL below with the actual image URL -->
                 <img src="https://www.bing.com/ck/a?!&&p=724a1f6a1754d15d61d31286d31cf9df5c00877a44c24a96eb0d4e4f8fff2cfdJmltdHM9MTczNjk4NTYwMA&ptn=3&ver=2&hsh=4&fclid=003d10f2-e6e9-630e-0bb9-05c8e7bf62bb&u=a1L2ltYWdlcy9zZWFyY2g_cT1sb2dvJTIwYXBwbGUmRk9STT1JUUZSQkEmaWQ9NTc4OEFGRjdGM0UyMUREQ0RDRTdCQzREMTY2NTY4QTdCRUM2RTZERA&ntb=1" alt="Logo">
             </div>
-
-
-            <div class="icon-links">
-                <a href="https://ibox.co.id/">
-                    <i class="fa fa-shopping-bag fa-lg" style="color: #000;"></i>
-                </a>
-            </div>
+            <!-- Navigation Menu -->
+            <nav>
+                <a href="https://ibox.co.id/iphone">home</a>
+                <a href="https://ibox.co.id/iphone">Iphone</a>
+                <a href="https://ibox.co.id/watch">Watch</a>
+            </nav>
         </div>
 
-        <!-- Navigation Menu -->
-        <nav>
-            <a href="https://ibox.co.id/iphone">home</a>
-
-            <a href="https://ibox.co.id/iphone">Iphone</a>
-            <a href="https://ibox.co.id/watch">Watch</a>
-        </nav>
         <div class="divider"></div>
-
     </div>
 </header>

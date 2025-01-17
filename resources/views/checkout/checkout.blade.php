@@ -13,7 +13,6 @@
             margin: 0 auto;
             padding: 20px;
         }
-
         .product-row {
             display: flex;
             align-items: flex-start;
