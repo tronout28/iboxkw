@@ -160,6 +160,11 @@
 <body>
     @include('home.header')
 
+    <br>
+    <br>
+    <br>
+    <br>
+
     <div class="container">
         <div class="form-header">
             <h1>Jual Hpmu</h1>
@@ -550,7 +555,14 @@
         });
     </script>
 
+    <br>
+    <br>
+    <br>
+    <br>
+    <footer>
+        @include('component.footer')
 
+    </footer>
 </body>
 
 </html>

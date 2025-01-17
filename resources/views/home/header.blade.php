@@ -172,6 +172,20 @@
                 <a href="/catalogue">Watch</a>
                 <a href="sell">Jual</a>
             </nav>
+            
+             <!-- Authentication Links -->
+             <div class="icon-links">
+                @guest
+                    <!-- Guest (not logged in) -->
+                    <a href="{{ route('login') }}">Login</a>
+                    <a href="{{ route('register') }}">Register</a>
+                @endguest
+
+                @auth
+                    <!-- Authenticated (logged in) -->
+                    <a href="{{ route('profile') }}">Profile</a>
+                @endauth
+            </div>
         </div>
 
         <div class="divider"></div>
