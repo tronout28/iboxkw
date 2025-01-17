@@ -22,11 +22,11 @@ Route::get('/profile', function () {
 
 Route::get('/register', function () {
     return view('register.register'); 
-});
+})->name('register');
 
 Route::get('/login', function () {
     return view('login.login'); 
-});
+})->name('login');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
