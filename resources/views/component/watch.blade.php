@@ -34,12 +34,10 @@
             overflow-x: auto;
             padding-top: 20px;
             padding-bottom: 20px;
-            padding-left: 20px; /* Padding kiri */
-            padding-right: 20px; /* Padding kanan */
+            justify-content: center; /* Memusatkan grid secara horizontal */
             scroll-behavior: smooth;
             white-space: nowrap;
         }
-
 
         /* Styling for the new product card */
         .product-card {
@@ -51,7 +49,7 @@
             overflow: hidden;
             width: 100%;
             max-width: 300px;
-            margin: 20px;
+            margin: 20px auto; /* Memusatkan setiap produk dengan margin otomatis */
             transition: transform 0.3s ease;
         }
 
@@ -61,11 +59,9 @@
 
         .product-image {
             width: 100%;
-            height: 300px;
+            height: 200px;
             object-fit: contain; /* Menjaga gambar tetap utuh di dalam kontainer */
         }
-
-
 
         .product-info {
             padding: 20px;
@@ -85,7 +81,6 @@
             white-space: normal;
         }
 
-
         .product-category {
             font-size: 0.9rem;
             color: #888;
@@ -104,33 +99,33 @@
         <?php
         $products = [
             [
-                'image' => 'https://th.bing.com/th?id=OIP.vEbAx4ltTM5CLrMgWPMe3gHaO0&w=175&h=350&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2',
-                'name' => 'Product 1',
-                'description' => 'This is the description for product 1.',
-                'category' => 'Electronics',
-                'price' => 99.99
+                'image' => 'https://th.bing.com/th?id=OIP.WRYrPU4OoPXDKr6plK6HeQAAAA&w=243&h=256&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2',
+                'name' => 'Iwatch Series 6',
+                'description' => 'The latest Iwatch series with advanced health tracking features.',
+                'category' => 'Iwatch',
+                'price' => 399.99
             ],
             [
-                'image' => 'https://th.bing.com/th?id=OIP.vEbAx4ltTM5CLrMgWPMe3gHaO0&w=175&h=350&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2',
-                'name' => 'Product 2',
-                'description' => 'This is the description for product 2.',
-                'category' => 'Home & Kitchen',
-                'price' => 49.99
+                'image' => 'https://th.bing.com/th?id=OIP.WRYrPU4OoPXDKr6plK6HeQAAAA&w=243&h=256&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2',
+                'name' => 'Iwatch Series 6',
+                'description' => 'The latest Iwatch series with advanced health tracking features.',
+                'category' => 'Iwatch',
+                'price' => 399.99
             ],
             [
-                'image' => 'https://th.bing.com/th?id=OIP.vEbAx4ltTM5CLrMgWPMe3gHaO0&w=175&h=350&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2',
-                'name' => 'Product 3',
-                'description' => 'This is the description for product 3.',
-                'category' => 'Clothing',
-                'price' => 29.99
+                'image' => 'https://th.bing.com/th?id=OIP.WRYrPU4OoPXDKr6plK6HeQAAAA&w=243&h=256&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2',
+                'name' => 'Iwatch Series 6',
+                'description' => 'The latest Iwatch series with advanced health tracking features.',
+                'category' => 'Iwatch',
+                'price' => 399.99
             ],
             [
-                'image' => 'https://th.bing.com/th?id=OIP.vEbAx4ltTM5CLrMgWPMe3gHaO0&w=175&h=350&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2',
-                'name' => 'Product 4',
-                'description' => 'This is the description for product 4.',
-                'category' => 'Books',
-                'price' => 15.99
-            ]
+                'image' => 'https://th.bing.com/th?id=OIP.WRYrPU4OoPXDKr6plK6HeQAAAA&w=243&h=256&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2',
+                'name' => 'Iwatch Series 6',
+                'description' => 'The latest Iwatch series with advanced health tracking features.',
+                'category' => 'Iwatch',
+                'price' => 399.99
+            ],
         ];
 
         // Loop through and display products

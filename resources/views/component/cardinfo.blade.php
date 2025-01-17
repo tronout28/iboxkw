@@ -13,9 +13,10 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f3f4f6;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f9fafb;
             padding: 2rem;
+            color: #333;
         }
 
         /* Card Container and Cards */
@@ -30,54 +31,61 @@
 
         .info-card {
             display: flex;
-            align-items: flex-start;
-            background: white;
+            flex-direction: column;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 2rem;
-            transition: transform 0.2s ease;
-            width: 100%;   
         }
 
         .info-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
         .card-content {
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
-            width: 100%;
         }
 
         .card-title {
-            font-size: 0.875rem;
-            font-weight: 600;
+            font-size: 0.9rem;
+            font-weight: bold;
             text-transform: uppercase;
+            color: #4b5563;
+            letter-spacing: 1px;
             margin-bottom: 0.5rem;
-            color: #6b7280;
         }
 
         .card-heading {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             font-weight: 600;
-            line-height: 1.4;
             color: #1f2937;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
         }
 
         .card-description {
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #4b5563;
-    max-height: 60px;
-    max-width: fit-content;
-    overflow: hidden; /* Potong konten yang melebihi batas tinggi */
-    text-overflow: ellipsis; /* Tambahkan "..." jika teks terlalu panjang */
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* Batasi ke 3 baris */
-    -webkit-box-orient: vertical; /* Mengaktifkan line clamp */
-}
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #6b7280;
+            max-height: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .card-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
 
         .loading {
             text-align: center;
@@ -97,26 +105,16 @@
             max-width: 600px;
         }
 
-        .feature-cards {
-            display: grid;
-            grid-template-columns: repeat(1, 1fr);
-            gap: 1.5rem;
-            margin: 2rem auto;
-            max-width: 1200px;
-        }
-
         /* Responsive Design */
         @media (min-width: 768px) {
-            .card-container,
-            .feature-cards {
+            .card-container {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (min-width: 1024px) {
-            .card-container,
-            .feature-cards {
-                grid-template-columns: repeat(4, 1fr);
+            .card-container {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
@@ -138,40 +136,40 @@
     <script>
         // Function to fetch and display articles
         async function fetchArticles() {
-    const loadingElement = document.getElementById('loading');
-    const errorElement = document.getElementById('error');
-    
-    try {
-        loadingElement.style.display = 'block';
-        errorElement.style.display = 'none';
+            const loadingElement = document.getElementById('loading');
+            const errorElement = document.getElementById('error');
+            
+            try {
+                loadingElement.style.display = 'block';
+                errorElement.style.display = 'none';
 
-        const response = await fetch('/get-artikel');
-        const responseText = await response.text(); 
-        
-        console.log('Raw response:', responseText); // Debug log
-        
-        try {
-            const result = JSON.parse(responseText);
-            if (result.status === 'success') {
-                displayArticles(result.data);
-            } else {
-                throw new Error(result.message || 'Failed to fetch articles');
+                const response = await fetch('/get-artikel');
+                const responseText = await response.text(); 
+                
+                console.log('Raw response:', responseText); // Debug log
+                
+                try {
+                    const result = JSON.parse(responseText);
+                    if (result.status === 'success') {
+                        displayArticles(result.data);
+                    } else {
+                        throw new Error(result.message || 'Failed to fetch articles');
+                    }
+                } catch (parseError) {
+                    console.error('JSON Parse Error:', parseError);
+                    throw new Error('Invalid response format');
+                }
+            } catch (error) {
+                console.error('Detailed error:', error);
+                errorElement.textContent = `Error: ${error.message}`;
+                errorElement.style.display = 'block';
+            } finally {
+                loadingElement.style.display = 'none';
             }
-        } catch (parseError) {
-            console.error('JSON Parse Error:', parseError);
-            throw new Error('Invalid response format');
         }
-    } catch (error) {
-        console.error('Detailed error:', error);
-        errorElement.textContent = `Error: ${error.message}`;
-        errorElement.style.display = 'block';
-    } finally {
-        loadingElement.style.display = 'none';
-    }
-}
 
         // Function to display articles in the UI
-                function displayArticles(articles) {
+        function displayArticles(articles) {
             const container = document.getElementById('articles-container');
             if (!container) {
                 console.error('Container element not found');
@@ -186,17 +184,18 @@
                 
                 articleElement.innerHTML = `
                 <a href="/artikel/${article.id}" style="text-decoration: none; color: inherit;">
+                    <img src="${escapeHtml(article.image)}" alt="Article Image" class="card-image">
                     <div class="card-content">
                         <h3 class="card-title text-gray-500">${escapeHtml(article.title)}</h3>
                         <p class="card-heading text-gray-800">${escapeHtml(article.subtitle || '')}</p>
                         <p class="card-description text-gray-800">${escapeHtml(truncateText(article.content, 150))}</p>
                     </div>
+                </a>
                 `;
                 
                 container.appendChild(articleElement);
             });
         }
-
 
         // Helper function to escape HTML and prevent XSS
         function escapeHtml(unsafe) {
@@ -210,6 +209,7 @@
 
         // Call the fetch function when the page loads
         document.addEventListener('DOMContentLoaded', fetchArticles);
+
         // Function to truncate text to a specific character limit
         function truncateText(text, limit) {
             if (text.length > limit) {
@@ -217,7 +217,6 @@
             }
             return text;
         }
-
     </script>
 </body>
 </html>
