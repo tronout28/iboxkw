@@ -77,8 +77,6 @@ class ProductController extends Controller
             'description' => 'required|string',
             'category_id' => 'required|numeric|exists:categories,id',
             'price' => 'required|numeric',
-            'requested' => ['nullable', Rule::in(['non-accepted', 'accepted', 'rejected'])],
-            'status' => ['nullable', Rule::in(['active', 'inactive'])],
             'user_id' => 'nullable|numeric',
             'minuses' => 'array',
             'minuses.*' => 'numeric|exists:minuses,id',
@@ -99,8 +97,6 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
             'category' => $category->name_iphone,
             'price' => $request->price,
-            'requested' => $request->requested,
-            'status' => $request->status,
             'user_id' => $request->user_id,
         ]);
 
@@ -112,7 +108,7 @@ class ProductController extends Controller
 
             // Save the image name and URL
             $product->image = $imageName;
-            $product->image_url = url('images-product/' . $imageName);
+            $product->image = url('images-product/' . $imageName);
         }
 
         $product->save();
@@ -209,7 +205,7 @@ class ProductController extends Controller
 
             // Save the new image name to the database
             $product->image = $imageName;
-            $product->image_url = url('images-product/' . $imageName);
+            $product->image = url('images-product/' . $imageName);
 
             $product->save();
         }
