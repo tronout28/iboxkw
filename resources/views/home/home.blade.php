@@ -7,25 +7,40 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="" rel="stylesheet">
     <style>
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', Arial, sans-serif;
+            background-color: #f9fafb;
+            padding: 2rem;
+            color: #333;
+        }
+
         .h1 {
-            margin-top: 20px;
+            margin: 2rem auto;
             text-align: center;
+            max-width: 1200px;
         }
 
         .divider {
             width: 100%;
+            max-width: 1200px;
             height: 1px;
             background-color: #ddd;
-            margin: 20px 0;
+            margin: 2rem auto;
         }
 
-        /* Styling untuk section */
         .section {
+            width: 100%;
+            max-width: 1200px;
+            margin: 2rem auto;
             display: flex;
             justify-content: space-between;
             gap: 20px;
-            margin-top: 20px;
         }
 
         /* Styling untuk section item */
@@ -50,10 +65,12 @@
         }
 
         .slideshow-container {
-        position: relative;
-        max-width: 100%;
-        margin-bottom: 20px;
-    }
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            box-sizing: border-box;
+        }
 
         .mySlides {
             display: none;
@@ -67,9 +84,6 @@
             display: block; /* Mengubah gambar menjadi block-level element */
             margin: 0 auto; /* Memusatkan gambar secara horizontal */
         }
-
-        
-
     </style>
 
     <title>iBox</title>
@@ -86,53 +100,53 @@
             </div>
         </div>
 
-
-
         <div class="mySlides fade">
             <div class="slide">
                 <img src="https://ibox.co.id/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Feraspacelink%2Fpmp%2Fproduction%2Fbanners%2Fimages%2FcZeczD8aEY1Rr4TdUBwP9vCX2lDuUGvAWAnkU2QF.webp&w=1920&q=85" alt="Slide 2">
             </div>
         </div>
     </div>
+
     <div class="divider"></div>
+
     <h1 class="h1">Cek produk terbaru</h1>
     @include('component.produk')
 
     <div class="divider"></div>
 
     <div class="section">
-        <h1></h1>
-      <!-- iPhone Section -->
-        <!-- iPhone Section -->
-<div class="section-item">
-    <div class="icon">
-        <i class="fas fa-mobile-alt"></i> <!-- Icon iPhone -->
+        <div class="section-item">
+            <div class="icon">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h3>Temukan iPhone terbaru dengan berbagai fitur canggih.</h3>
+            <br>
+            <p class="text"> Mulai dari kamera profesional hingga performa luar biasa.</p>
+        </div>
+        <div class="section-item">
+            <div class="icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <h3>Dapatkan servis dan bantuan profesional.</h3>
+            <br>
+            <p class="text"> Mulai dari pengaturan device terbaru-mu hingga servis, dapatkan pengalaman terbaiknya. <a href="#">Lebih lanjut</a></p>
+        </div>
+      
+        <div class="section-item">
+            <div class="icon">
+                <i class="fas fa-truck"></i>
+            </div>
+            <h3>Beli online, ambil di toko.</h3>
+            <br>
+            <p class="text">Hubungi admin lalu datang ke toko</p>
+        </div>
     </div>
-    <p class="text">Temukan iPhone terbaru dengan berbagai fitur canggih yang mempermudah hidup Anda. Mulai dari kamera profesional hingga performa luar biasa.</p>
-</div>
-
-<!-- iWatch Section -->
-<div class="section-item">
-    <div class="icon">
-        <i class="fas fa-clock"></i> <!-- Icon iWatch (jika tersedia) -->
-    </div>
-    <p class="text">Dengan iWatch, pantau kesehatan Anda dengan lebih mudah dan tetap terhubung dengan dunia sekitar. Fitur canggih dan desain elegan.</p>
-</div>
-
-
-    </div>
+    
 
     <div class="divider"></div>
 
     <h1 class="h1">Artikel tentang apple</h1>
     @include('component.cardinfo')
-
-    <div class="divider"></div>
-
-    <h1 class="h1">Produk Watch kami</h1>
-
-    @include('component.watch')
-
 
     @include('component.footer')
 

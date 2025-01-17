@@ -49,7 +49,7 @@ Route::post('/artikel', [ArtikelController::class, 'store']);
 Route::get('api/filtered-products', [ProductController::class, 'getFilteredProducts']);
 
 
-Route::get('/products', [ProductController::class, 'getProducts'])->name('products.data');
+Route::get('/products', [ProductController::class, 'getProducts']);
 Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 Route::get('/admin/dealer/{id}/detail', [ProductController::class, 'showAdmin'])->name('admin.dealer.detail');
 Route::get('/admin/dealer/{id}/edit', [ProductController::class, 'edit'])->name('admin.dealer.edit');

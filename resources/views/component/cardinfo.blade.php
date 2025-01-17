@@ -151,7 +151,8 @@
                 try {
                     const result = JSON.parse(responseText);
                     if (result.status === 'success') {
-                        displayArticles(result.data);
+                        // Display only the first 4 articles
+                        displayArticles(result.data.slice(0, 3));
                     } else {
                         throw new Error(result.message || 'Failed to fetch articles');
                     }
