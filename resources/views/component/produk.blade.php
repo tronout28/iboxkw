@@ -118,7 +118,7 @@
     <script>
         async function fetchProducts() {
             try {
-                const response = await fetch('/products');
+                const response = await fetch('/filtered-products');
                 const products = await response.json();
                 const productsSlider = document.getElementById('products-slider');
 
