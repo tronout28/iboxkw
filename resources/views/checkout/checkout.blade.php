@@ -43,6 +43,46 @@
         .back-button:hover {
             background-color: #45a049;
         }
+
+        /* Select Dropdown */
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #E5E7EB;
+            margin-top: 5px;
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-button {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #20b958;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-row {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .product-image {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -65,14 +105,12 @@
                         <p class="original-price">
                             {{ $product->price > $product->total_price ? 'Rp' . number_format($product->price, 0, ',', '.') : '' }}
                         </p>
-                        <p class="discounted-price">
-                            Rp{{ number_format($product->total_price, 0, ',', '.') }}
-                            @if($product->price > $product->total_price)
-                                <span class="discount-badge">
-                                    {{ round((($product->price - $product->total_price) / $product->price) * 100) }}% OFF
-                                </span>
-                            @endif
-                        </p>
+                        <p class="discounted-price">Rp{{ number_format($product->total_price, 0, ',', '.') }}</p>
+                        @if($product->price > $product->total_price)
+                            <span class="discount-badge">
+                                {{ round((($product->price - $product->total_price) / $product->price) * 100) }}% OFF
+                            </span>
+                        @endif
                     @else
                         <p class="discounted-price">Rp{{ number_format($product->price, 0, ',', '.') }}</p>
                     @endif
@@ -81,14 +119,12 @@
                 <!-- Menambahkan Deskripsi Produk dengan transparansi abu-abu -->
                 <div class="transparent-card description">
                     <i class="fas fa-mobile-alt"></i> Description
-
                     <p>{{ $product->description ?? 'Deskripsi produk tidak tersedia.' }}</p>
                 </div>
 
                 <!-- Mengubah Model menjadi Statik dengan transparansi abu-abu -->
                 <div class="transparent-card product-model">
                     <i class="fas fa-mobile-alt"></i> Model
-
                     <p id="modelSelect">{{ $product->category ?? 'Model Tidak Tersedia' }}</p>
                 </div>
 
@@ -120,10 +156,17 @@
                 <a href="javascript:history.back()" class="back-button">
                     <i class="fas fa-arrow-left"></i> Kembali
                 </a>
+
+                <!-- WhatsApp Button -->
+                <a class="whatsapp-button" href="https://wa.me/?text={{ urlencode('Saya tertarik dengan produk: ' . ($product->name ?? 'Produk Tidak Tersedia') . ' - Harga: Rp' . number_format($product->total_price ?? $product->price, 0, ',', '.')) }}" target="_blank">
+                    Hubungi via WhatsApp
+                </a>
             </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const productId = "{{ $productId ?? 'null' }}";
