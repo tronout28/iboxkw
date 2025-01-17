@@ -64,6 +64,26 @@
             margin: 0 0 10px; /* Menambahkan margin bawah agar lebih teratur */
         }
 
+        .product-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .product-category {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
         .product-price {
             font-size: 1.125rem;
             color: #333;
@@ -137,5 +157,3 @@
     </script>
 </body>
 </html>
-
-
