@@ -122,38 +122,26 @@
         <div class="top-section">
             <!-- Logo -->
             <div class="logo">
-                <img src="path-to-logo.png" alt="Logo">
+                <!-- Replace the URL below with the actual image URL -->
+                <img src="https://www.bing.com/ck/a?!&&p=724a1f6a1754d15d61d31286d31cf9df5c00877a44c24a96eb0d4e4f8fff2cfdJmltdHM9MTczNjk4NTYwMA&ptn=3&ver=2&hsh=4&fclid=003d10f2-e6e9-630e-0bb9-05c8e7bf62bb&u=a1L2ltYWdlcy9zZWFyY2g_cT1sb2dvJTIwYXBwbGUmRk9STT1JUUZSQkEmaWQ9NTc4OEFGRjdGM0UyMUREQ0RDRTdCQzREMTY2NTY4QTdCRUM2RTZERA&ntb=1" alt="Logo">
             </div>
 
-            <!-- Search Box -->
-            <div class="search-box">
-                <input type="text" placeholder="Cari produk">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-            </div>
 
             <div class="icon-links">
-    <a href="{{ route('sell') }}">
-        <i class="fa fa-shopping-bag fa-lg" style="color: #000;"></i>
-    </a>
-</div>
-
-
-
+                <a href="https://ibox.co.id/">
+                    <i class="fa fa-shopping-bag fa-lg" style="color: #000;"></i>
+                </a>
+            </div>
         </div>
 
         <!-- Navigation Menu -->
         <nav>
-            <a href="#">Mac</a>
-            <a href="#">iPad</a>
-            <a href="#">iPhone</a>
-            <a href="#">Watch</a>
-            <a href="#">Music</a>
-            <a href="#">Aksesoris</a>
-            <a href="#">Layanan</a>
-            <a href="#">Event & Promo</a>
+            <a href="https://ibox.co.id/iphone">home</a>
+
+            <a href="https://ibox.co.id/iphone">Iphone</a>
+            <a href="https://ibox.co.id/watch">Watch</a>
         </nav>
+        <div class="divider"></div>
+
     </div>
 </header>
